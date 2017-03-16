@@ -5,6 +5,9 @@
  *      Author: tejal
  */
 
+#include <iostream>
+using namespace std;
+
 class QueryProcessing {
 
 	/*GeometryCollection processQuery (QueryTree qt) {
@@ -20,5 +23,3 @@ class QueryProcessing {
 	}*/
 
 };
-
-
