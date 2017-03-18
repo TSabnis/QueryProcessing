@@ -6,20 +6,23 @@
  */
 
 #include <iostream>
+#include <vector>
+#include "QueryTree.h"
 using namespace std;
 
 class QueryProcessing {
 
-	/*GeometryCollection processQuery (QueryTree qt) {
+	void processQuery (QueryTree qTree) {
+		string root = qTree->root;
+		vector<string> leftFilter = qTree->leftFilter;
+		vector<string> rightFilter = qTree->rightFilter;
+		//GeometryCollection leftData = qTree->leftData;
+		//GeometryCollection rightData = qTree->rightData;
 
 	}
 
-	std::vector materializeLeft () {
+	vector materializeBranch (vector<string> filter) {
 
 	}
-
-	std::vector materializeRight () {
-
-	}*/
 
 };
