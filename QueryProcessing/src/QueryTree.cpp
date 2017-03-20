@@ -7,16 +7,18 @@
 
 #include <iostream>
 #include <vector>
+#include "GeometryCollection.h"
+
 using namespace std;
 
 class QueryTree {
 
-	private:
+	public:
 		vector<string> root;
-		vector<string> leftFilter;
-		//GeometryCollection leftData;
-		vector<string> rightFilter;
-		//GeometryCollection rightData;
+		vector<vector<string>> leftFilter;
+		GeometryCollection leftData;
+		vector<vector<string>> rightFilter;
+		GeometryCollection rightData;
 
 
 };
