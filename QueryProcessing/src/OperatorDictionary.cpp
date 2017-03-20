@@ -7,7 +7,7 @@
 
 #include <iostream>
 #include <vector>
-#include "Geometry.h"
+#include "geometry.h"
 
 typedef vector<Geometry> (*FunctionPointerType)(vector<vector<string>> filter, int position);
 

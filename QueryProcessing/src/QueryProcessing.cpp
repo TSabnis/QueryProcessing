@@ -7,10 +7,9 @@
 
 #include <iostream>
 #include <vector>
-#include "QueryTree.h"
-#include "Geometry.h"
-#include "GeometryCollection.h"
-#include "OperatorDictionary.h"
+#include "query-tree.h"
+#include "geometry.h"
+#include "OperatorDictionary.cpp"
 
 using namespace std;
 
@@ -20,11 +19,11 @@ private:
 	OperatorDictionary opDict;
 
 	void processQuery (QueryTree qTree) {
-		string root = qTree->root;
-		vector<string> leftFilter = qTree->leftFilter;
-		vector<string> rightFilter = qTree->rightFilter;
-		GeometryCollection leftData = qTree->leftData;
-		GeometryCollection rightData = qTree->rightData;
+		string* root = qTree.root;
+		string* leftFilter = qTree.leftFilter;
+		string* rightFilter = qTree.rightFilter;
+		GeometryCollection leftData = qTree.leftData;
+		GeometryCollection rightData = qTree.rightData;
 
 	}
 
@@ -33,7 +32,7 @@ private:
 		vector<Geometry> result;
 		// get function for next operator to execute
 		vector<Geometry> (*pointerToGetNext)(vector<vector<string>> filter);
-		pointerToGetNext = opDict.getPointerToGetNext(filter[0]);
+		pointerToGetNext = opDict.getPointerToGetNext(filter[0][0]);
 		// get output from first level of filter and add output to result set
 
 	}
