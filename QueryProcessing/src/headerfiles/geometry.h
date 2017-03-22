@@ -59,7 +59,13 @@ class RectangleRectangle {
 };
 
 class GeometryCollection {
-
+public:
+	GeometryCollection getNext(int i);
+	bool isEmpty();
+	void addAll(GeometryCollection coll);
+	int size();
+	int insert(Geometry geo);
+	Geometry get(int index);
 };
 
 class PointCollection : GeometryCollection{

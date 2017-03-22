@@ -9,7 +9,7 @@
 #include <vector>
 #include "geometry.h"
 
-typedef vector<Geometry> (*FunctionPointerType)(vector<vector<string>> filter, int position);
+typedef GeometryCollection (*FunctionPointerType)(vector<vector<string>> filter, int opPosition, GeometryCollection data);
 
 class OperatorDictionary {
 

@@ -3,9 +3,9 @@
 
 class QueryTree {
 public:
-    string* root;
-    string* leftFilter;
+	vector<string> root;
+	vector<vector<string>> leftFilter;
     GeometryCollection leftData;
-    string* rightFilter;
+    vector<vector<string>> rightFilter;
     GeometryCollection rightData;
 };

@@ -19,22 +19,27 @@ private:
 	OperatorDictionary opDict;
 
 	void processQuery (QueryTree qTree) {
-		string* root = qTree.root;
-		string* leftFilter = qTree.leftFilter;
-		string* rightFilter = qTree.rightFilter;
+		vector<string> root = qTree.root;
+		vector<vector<string>> leftFilter = qTree.leftFilter;
+		vector<vector<string>> rightFilter = qTree.rightFilter;
 		GeometryCollection leftData = qTree.leftData;
 		GeometryCollection rightData = qTree.rightData;
 
 	}
 
-	vector<Geometry> materializeBranch (vector<vector<string>> filter) {
+	GeometryCollection materializeBranch (vector<vector<string>> filter, GeometryCollection data) {
 		// initialize result
-		vector<Geometry> result;
+		GeometryCollection result, currentRun;
 		// get function for next operator to execute
-		vector<Geometry> (*pointerToGetNext)(vector<vector<string>> filter);
-		pointerToGetNext = opDict.getPointerToGetNext(filter[0][0]);
-		// get output from first level of filter and add output to result set
-
+		GeometryCollection (*pointerToGetNext)(vector<vector<string>> filter, int opPosition, GeometryCollection data);
+		pointerToGetNext = opDict.getPointerToGetNext(filter[filter.size()-1][0]);
+		// get output from first filter and add output to result set
+		currentRun = pointerToGetNext(filter);
+		while (!currentRun.isEmpty()) {
+			result.addAll(currentRun);
+			currentRun = pointerToGetNext(filter, filter.size()-2, data);
+		}
+		return result;
 	}
 
 };
