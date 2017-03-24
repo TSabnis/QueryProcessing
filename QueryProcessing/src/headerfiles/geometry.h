@@ -61,6 +61,7 @@ class RectangleRectangle {
 class GeometryCollection {
 public:
 	GeometryCollection getNext(int i);
+	string getName();
 	bool isEmpty();
 	void addAll(GeometryCollection coll);
 	int size();

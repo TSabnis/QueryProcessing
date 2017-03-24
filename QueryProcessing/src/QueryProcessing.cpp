@@ -8,6 +8,7 @@
 #include <iostream>
 #include <vector>
 #include "query-tree.h"
+#include "query-processing.h"
 #include "geometry.h"
 #include "OperatorDictionary.cpp"
 
@@ -18,13 +19,26 @@ class QueryProcessing {
 private:
 	OperatorDictionary opDict;
 
-	void processQuery (QueryTree qTree) {
+	QueryResult processQuery (QueryTree qTree) {
+		QueryResult queryResult = new QueryResult();
 		vector<string> root = qTree.root;
 		vector<vector<string>> leftFilter = qTree.leftFilter;
 		vector<vector<string>> rightFilter = qTree.rightFilter;
 		GeometryCollection leftData = qTree.leftData;
 		GeometryCollection rightData = qTree.rightData;
 
+		GeometryCollection leftResult = materializeBranch(leftFilter, leftData);
+
+		if (root[0] == "") {
+			if (leftData.getName() == "") {
+				//queryResult.setPointCollection((PointCollection)leftResult);
+			}
+			else {
+				//queryResult.setRectangleCollection((RectangleCollection)leftResult);
+			}
+		}
+
+		return queryResult;
 	}
 
 	GeometryCollection materializeBranch (vector<vector<string>> filter, GeometryCollection data) {
