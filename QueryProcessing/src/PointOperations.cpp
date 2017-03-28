@@ -27,7 +27,7 @@ public:
 	}
 
 	static bool isWithin (geometry::Point point, Rectangle rec){
-		return boost::geometry::within(point(point.x, point.y), rec);
+		return boost::geometry::within(point(point.x, point.y), box(point(rec.x1,rec.y1), point(rec.x2,rec.y2)));
 	}
 
 	static bool isOverlapping (geometry::Point point1, geometry::Point point2){
@@ -35,14 +35,14 @@ public:
 	}
 
 	static bool isOverlapping (geometry::Point point, Rectangle rec){
-		return boost::geometry::overlaps(point(point.x, point.y),rec);
+		return boost::geometry::overlaps(point(point.x, point.y),box(point(rec.x1,rec.y1), point(rec.x2,rec.y2)));
 	}
 
 	static double getDistance (geometry::Point point1, geometry::Point point2){
 		return boost::geometry::distance(point(point1.x, point1.y), point(point2.x, point2.y));
 	}
 	static double getDistance (geometry::Point point, Rectangle rec){
-		return boost::geometry::distance(point(point.x, point.y), rec);
+		return boost::geometry::distance(point(point.x, point.y), box(point(rec.x1,rec.y1), point(rec.x2,rec.y2)));
 	}
 
 };
