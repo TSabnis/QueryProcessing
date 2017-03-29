@@ -12,6 +12,8 @@
 #include "geometry.h"
 #include "OperatorDictionary.cpp"
 
+#define NULL    ((void *)0)
+
 using namespace std;
 
 class QueryProcessing {
@@ -75,6 +77,42 @@ private:
 			currentRun = pointerToGetNext(filter, filter.size()-2, data);
 		}
 		return result;
+	}
+
+	PointPointCollection rangeJoin (PointCollection leftData, vector<vector<string>> filter, PointCollection rightData) {
+		return NULL;
+	}
+
+	RectangleRectangleCollection rangeJoin (RectangleCollection leftData, vector<vector<string>> filter, RectangleCollection rightData) {
+		return NULL;
+	}
+
+	PointRectangleCollection rangeJoin (PointCollection leftData, vector<vector<string>> filter, RectangleCollection rightData) {
+		return NULL;
+	}
+
+	PointPointCollection knnJoin (vector<string> root, PointCollection leftData, vector<vector<string>> filter, PointCollection rightData) {
+		return NULL;
+	}
+
+	RectangleRectangleCollection knnJoin (vector<string> root, RectangleCollection leftData, vector<vector<string>> filter, RectangleCollection rightData) {
+		return NULL;
+	}
+
+	PointRectangleCollection knnJoin (vector<string> root, PointCollection leftData, vector<vector<string>> filter, RectangleCollection rightData) {
+		return NULL;
+	}
+
+	PointPointCollection distanceJoin (PointCollection leftData, vector<vector<string>> filter, PointCollection rightData) {
+		return NULL;
+	}
+
+	RectangleRectangleCollection distanceJoin (RectangleCollection leftData, vector<vector<string>> filter, RectangleCollection rightData) {
+		return NULL;
+	}
+
+	PointRectangleCollection distanceJoin (PointCollection leftData, vector<vector<string>> filter, RectangleCollection rightData) {
+		return NULL;
 	}
 
 };
