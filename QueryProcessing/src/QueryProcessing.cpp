@@ -24,10 +24,16 @@ private:
 		vector<string> root = qTree.root;
 		vector<vector<string>> leftFilter = qTree.leftFilter;
 		vector<vector<string>> rightFilter = qTree.rightFilter;
-		GeometryCollection leftData = qTree.leftData;
-		GeometryCollection rightData = qTree.rightData;
+		PointCollection leftDataPoint = qTree.leftDataPoint;
+		RectangleCollection leftDataRect = qTree.leftDataRect;
+		PointCollection rightDataPoint = qTree.rightDataPoint;
+		RectangleCollection rightDataRect = qTree.rightDataRect;
 
-		GeometryCollection leftResult = materializeBranch(leftFilter, leftData);
+		if (leftDataPoint != NULL && leftDataRect == NULL) {
+			PointCollection leftResult = materializeBranch(leftFilter, leftData);
+		} else if (leftDataPoint == NULL && leftDataRect != NULL) {
+			RectangleCollection leftResult = materializeBranch(leftFilter, leftData);
+		}
 
 		if (root[0] == "") {
 			if (leftData.getName() == "") {
@@ -41,11 +47,26 @@ private:
 		return queryResult;
 	}
 
-	GeometryCollection materializeBranch (vector<vector<string>> filter, GeometryCollection data) {
+	PointCollection materializeBranch (vector<vector<string>> filter, PointCollection data) {
 		// initialize result
-		GeometryCollection result, currentRun;
+		PointCollection result, currentRun;
 		// get function for next operator to execute
-		GeometryCollection (*pointerToGetNext)(vector<vector<string>> filter, int opPosition, GeometryCollection data);
+		PointCollection (*pointerToGetNext)(vector<vector<string>> filter, int opPosition, GeometryCollection data);
+		pointerToGetNext = opDict.getPointerToGetNext(filter[filter.size()-1][0]);
+		// get output from first filter and add output to result set
+		currentRun = pointerToGetNext(filter);
+		while (!currentRun.isEmpty()) {
+			result.addAll(currentRun);
+			currentRun = pointerToGetNext(filter, filter.size()-2, data);
+		}
+		return result;
+	}
+
+	RectangleCollection materializeBranch (vector<vector<string>> filter, RectangleCollection data) {
+		// initialize result
+		RectangleCollection result, currentRun;
+		// get function for next operator to execute
+		RectangleCollection (*pointerToGetNext)(vector<vector<string>> filter, int opPosition, GeometryCollection data);
 		pointerToGetNext = opDict.getPointerToGetNext(filter[filter.size()-1][0]);
 		// get output from first filter and add output to result set
 		currentRun = pointerToGetNext(filter);

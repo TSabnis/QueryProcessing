@@ -4,8 +4,10 @@
 class QueryTree {
 public:
 	vector<string> root;
-	vector<vector<string>> leftFilter;
-    GeometryCollection leftData;
-    vector<vector<string>> rightFilter;
-    GeometryCollection rightData;
+	vector<string> leftFilter;
+	PointCollection leftDataPoint;
+	RectangleCollection leftDataRect;
+	vector<string> rightFilter;
+	PointCollection rightDataPoint;
+	RectangleCollection rightDataRect;
 };
