@@ -32,17 +32,14 @@ private:
 		RectangleCollection rightDataRect = qTree.rightDataRect;
 
 		if (leftDataPoint != NULL && leftDataRect == NULL) {
-			PointCollection leftResult = materializeBranch(leftFilter, leftData);
-		} else if (leftDataPoint == NULL && leftDataRect != NULL) {
-			RectangleCollection leftResult = materializeBranch(leftFilter, leftData);
-		}
-
-		if (root[0] == "") {
-			if (leftData.getName() == "") {
-				//queryResult.setPointCollection((PointCollection)leftResult);
+			PointCollection leftResult = materializeBranch(leftFilter, leftDataPoint);
+			if (root[0] == "") {
+				queryResult.setPointCollection(leftResult);
 			}
-			else {
-				//queryResult.setRectangleCollection((RectangleCollection)leftResult);
+		} else if (leftDataPoint == NULL && leftDataRect != NULL) {
+			RectangleCollection leftResult = materializeBranch(leftFilter, leftDataRect);
+			if (root[0] == "") {
+				queryResult.setRectangleCollection(leftResult);
 			}
 		}
 
@@ -51,30 +48,34 @@ private:
 
 	PointCollection materializeBranch (vector<vector<string>> filter, PointCollection data) {
 		// initialize result
-		PointCollection result, currentRun;
-		// get function for next operator to execute
-		PointCollection (*pointerToGetNext)(vector<vector<string>> filter, int opPosition, GeometryCollection data);
-		pointerToGetNext = opDict.getPointerToGetNext(filter[filter.size()-1][0]);
-		// get output from first filter and add output to result set
-		currentRun = pointerToGetNext(filter);
-		while (!currentRun.isEmpty()) {
-			result.addAll(currentRun);
-			currentRun = pointerToGetNext(filter, filter.size()-2, data);
+		PointCollection result;
+		vector<Point> points = data.getNext(1);
+		while (points) {
+			bool passedAllOperators = true;
+			for (int i=0;i<filter.size();i++) {
+				passedAllOperators = passedAllOperators && opDict.applyOperator(filter[i],points[0]);
+			}
+			if (passedAllOperators) {
+				result.insert(points[0]);
+			}
+			points = data.getNext(1);
 		}
 		return result;
 	}
 
 	RectangleCollection materializeBranch (vector<vector<string>> filter, RectangleCollection data) {
 		// initialize result
-		RectangleCollection result, currentRun;
-		// get function for next operator to execute
-		RectangleCollection (*pointerToGetNext)(vector<vector<string>> filter, int opPosition, GeometryCollection data);
-		pointerToGetNext = opDict.getPointerToGetNext(filter[filter.size()-1][0]);
-		// get output from first filter and add output to result set
-		currentRun = pointerToGetNext(filter);
-		while (!currentRun.isEmpty()) {
-			result.addAll(currentRun);
-			currentRun = pointerToGetNext(filter, filter.size()-2, data);
+		RectangleCollection result;
+		vector<Rectangle> rects = data.getNext(1);
+		while (rects) {
+			bool passedAllOperators = true;
+			for (int i=0;i<filter.size();i++) {
+				passedAllOperators = passedAllOperators && opDict.applyOperator(filter[i],rects[0]);
+			}
+			if (passedAllOperators) {
+				result.insert(rects[0]);
+			}
+			rects = data.getNext(1);
 		}
 		return result;
 	}
