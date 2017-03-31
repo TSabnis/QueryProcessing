@@ -36,6 +36,15 @@ private:
 			if (root[0] == "") {
 				queryResult.setPointCollection(leftResult);
 			}
+			else if (root[0] == "knnJoin") {
+				queryResult.setPointCollection(leftResult);
+			}
+			else if (root[0] == "rangeJoin") {
+				queryResult.setPointCollection(leftResult);
+			}
+			else if (root[0] == "distanceJoin") {
+					queryResult.setPointCollection(leftResult);
+			}
 		} else if (leftDataPoint == NULL && leftDataRect != NULL) {
 			RectangleCollection leftResult = materializeBranch(leftFilter, leftDataRect);
 			if (root[0] == "") {
