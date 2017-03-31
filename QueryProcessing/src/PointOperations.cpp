@@ -16,7 +16,7 @@ class PointOperations{
 public:
 	static bool isIntersecting (Point p, Rectangle rec){
 
-		return boost::geometry::intersects(point(p.getCoordinates().at(0), p.getCoordinates().at(1)), box(point(rec.getCoordinates().at(0),rec.getCoordinates().at(1)), point(rec.getCoordinates().at(2),rec.getCoordinates().at(3))));
+		return boost::geometry::intersects(boost::geometry::point(p.getCoordinates().at(0), p.getCoordinates().at(1)), boost::geometry::box(point(rec.getCoordinates().at(0),rec.getCoordinates().at(1)), point(rec.getCoordinates().at(2),rec.getCoordinates().at(3))));
 	}
 
 	static bool isEqual (Point point1, Point point2){

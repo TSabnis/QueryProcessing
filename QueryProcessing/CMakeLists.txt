@@ -16,14 +16,11 @@ endif()
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
 set(SOURCE_FILES
-    src/headerfiles/geometry.h
-    src/headerfiles/query-processing.h
-    src/headerfiles/query-tree.h
-    src/headerfiles/query_result.h
+
     src/OperatorDictionary.cpp
     src/PointOperations.cpp
     src/QueryProcessing.cpp
-    src/TestQueryProcessing.cpp src/RectangleOperation.cpp)
+    src/TestQueryProcessing.cpp src/RectangleOperations.cpp)
 
 add_executable(QueryProcessing ${SOURCE_FILES})
 
