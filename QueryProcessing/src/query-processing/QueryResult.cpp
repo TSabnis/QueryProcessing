@@ -5,8 +5,8 @@
  *      Author: vnikhil
  */
 
-#include "headerfiles/geometry.h"
-#include "headerfiles/geometry-collection.h"
+#include "../integration/geometry.h"
+#include "../integration/geometry-collection.h"
 
 class QueryResult {
 
