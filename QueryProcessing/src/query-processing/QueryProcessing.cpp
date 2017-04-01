@@ -33,6 +33,60 @@ private:
 
 		if (leftDataPoint != NULL && leftDataRect == NULL) {
 			PointCollection leftResult = materializeBranch(leftFilter, leftDataPoint);
+			if (rightDataPoint != NULL && rightDataRect == NULL) {
+				PointCollection rightResult = materializeBranch(rightFilter, rightDataPoint);
+				if (root[0] == "") {
+					queryResult.setPointCollection(leftResult);
+				}
+				else if (root[0] == "knnJoin") {
+					queryResult.setPointCollection(leftResult);
+				}
+				else if (root[0] == "rangeJoin") {
+					queryResult.setPointCollection(leftResult);
+				}
+				else if (root[0] == "distanceJoin") {
+
+						queryResult.setPointCollection(leftResult);
+				}
+			}
+			else if (rightDataPoint == NULL && rightDataRect != NULL) {
+				RectangleCollection leftResult = materializeBranch(rightFilter, rightDataRect);
+				if (root[0] == "") {
+					queryResult.setPointCollection(leftResult);
+				}
+				else if (root[0] == "knnJoin") {
+					queryResult.setPointCollection(leftResult);
+				}
+				else if (root[0] == "rangeJoin") {
+					queryResult.setPointCollection(leftResult);
+				}
+				else if (root[0] == "distanceJoin") {
+
+						queryResult.setPointCollection(leftResult);
+				}
+			}
+
+		} else if (leftDataPoint == NULL && leftDataRect != NULL) {
+			RectangleCollection leftResult = materializeBranch(leftFilter, leftDataRect);
+			if (rightDataPoint != NULL && rightDataRect == NULL) {
+				PointCollection rightResult = materializeBranch(rightFilter, rightDataPoint);
+				if (root[0] == "") {
+					queryResult.setPointCollection(leftResult);
+				}
+				else if (root[0] == "knnJoin") {
+					queryResult.setPointCollection(leftResult);
+				}
+				else if (root[0] == "rangeJoin") {
+					queryResult.setPointCollection(leftResult);
+				}
+				else if (root[0] == "distanceJoin") {
+
+						queryResult.setPointCollection(leftResult);
+				}
+			}
+			else if (rightDataPoint == NULL && rightDataRect != NULL) {
+				RectangleCollection leftResult = materializeBranch(rightFilter, rightDataRect);
+			}
 			if (root[0] == "") {
 				queryResult.setPointCollection(leftResult);
 			}
@@ -43,14 +97,12 @@ private:
 				queryResult.setPointCollection(leftResult);
 			}
 			else if (root[0] == "distanceJoin") {
+
 					queryResult.setPointCollection(leftResult);
 			}
-		} else if (leftDataPoint == NULL && leftDataRect != NULL) {
-			RectangleCollection leftResult = materializeBranch(leftFilter, leftDataRect);
-			if (root[0] == "") {
-				queryResult.setRectangleCollection(leftResult);
-			}
 		}
+
+
 
 		return queryResult;
 	}
