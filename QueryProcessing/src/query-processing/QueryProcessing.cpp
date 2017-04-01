@@ -34,6 +34,8 @@ class QueryProcessing {
 private:
 	OperatorDictionary opDict;
 
+public:
+
 	QueryResult processQuery (QueryTree qTree) {
 		QueryResult queryResult;
 		vector<string> root = qTree.root;
