@@ -110,6 +110,8 @@ public:
 					else if (root[0] == "rangeJoin") {
 					}
 					else if (root[0] == "distanceJoin") {
+						RectangleRectangleCollection distanceJoinResult = distanceJoin(root, rightDataPoint, rightFilter, leftResult);
+						queryResult.setRectangleRectangleCollection(distanceJoinResult);
 					}
 				}
 			}
