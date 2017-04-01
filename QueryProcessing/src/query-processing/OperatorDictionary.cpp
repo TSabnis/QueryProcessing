@@ -20,11 +20,11 @@ public:
 
 	bool applyFilterBy (vector<string> filterDetails, Point inputPoint) {
 		bool isCriterionSatisfied = false;
-		float compareVal = stod(filterDetails[3]);
+		double compareVal = stod(filterDetails[3]);
 		string operatorName = filterDetails[2];
 
 		if (filterDetails[1] == "distance") {
-			float metricVal = po.getDistance(inputPoint,
+			double metricVal = po.getDistance(inputPoint,
 					Point(stod(filterDetails[4]),stod(filterDetails[5])));
 			if(operatorName == "gt" && metricVal > compareVal)
 				isCriterionSatisfied = true;
@@ -42,11 +42,11 @@ public:
 
 	bool applyFilterBy (vector<string> filterDetails, Rectangle inputRect) {
 		bool isCriterionSatisfied = false;
-		float compareVal = stod(filterDetails[3]);
+		double compareVal = stod(filterDetails[3]);
 		string operatorName = filterDetails[2];
 
 		if (filterDetails[1] == "distance") {
-			float metricVal = po.getDistance(Point(stod(filterDetails[4]),stod(filterDetails[5])), inputRect);
+			double metricVal = po.getDistance(Point(stod(filterDetails[4]),stod(filterDetails[5])), inputRect);
 			if(operatorName == "gt" && metricVal > compareVal)
 				isCriterionSatisfied = true;
 			else if(operatorName == "ge" && metricVal >= compareVal)
