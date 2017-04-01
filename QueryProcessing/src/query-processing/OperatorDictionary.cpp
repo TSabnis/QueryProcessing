@@ -7,7 +7,7 @@
 
 #include <iostream>
 #include <vector>
-#include "geometry.h"
+#include "../integration/geometry.h"
 #include "PointOperations.cpp"
 
 using namespace std;

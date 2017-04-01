@@ -7,9 +7,9 @@
 
 #include <iostream>
 #include <vector>
-#include "query-tree.h"
-#include "query-processing.h"
-#include "geometry.h"
+#include "../integration/query-tree.h"
+#include "../integration/query-processing.h"
+#include "../integration/geometry-collection.h"
 #include "OperatorDictionary.cpp"
 
 #define NULL    ((void *)0)

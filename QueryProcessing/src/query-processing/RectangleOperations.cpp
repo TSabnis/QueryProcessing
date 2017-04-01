@@ -7,12 +7,17 @@
 #include <boost/geometry/geometries/point.hpp>
 #include <boost/geometry/geometries/box.hpp>
 #include <boost/foreach.hpp>
-#include "geometry.h"
+#include "../integration/geometry.h"
 #include <vector>
+#include <boost/geometry/algorithms/intersects.hpp>
+#include <boost/geometry/algorithms/equals.hpp>
+#include <boost/geometry/algorithms/overlaps.hpp>
+#include <boost/geometry/algorithms/distance.hpp>
 
 using namespace std;
 namespace bg = boost::geometry;
-namespace bgi = boost::geometry::index;
+typedef bg::model::point<float, 2, bg::cs::cartesian> point;
+typedef bg::model::box<point> box;
 
 using namespace std;
 

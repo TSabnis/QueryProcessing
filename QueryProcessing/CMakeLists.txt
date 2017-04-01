@@ -17,10 +17,11 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
 set(SOURCE_FILES
 
-    src/OperatorDictionary.cpp
-    src/PointOperations.cpp
-    src/QueryProcessing.cpp
-    src/TestQueryProcessing.cpp src/RectangleOperations.cpp)
+    src/query-processing/OperatorDictionary.cpp
+    src/query-processing/PointOperations.cpp
+    src/query-processing/QueryProcessing.cpp
+    src/query-processing/TestQueryProcessing.cpp
+    src/query-processing/RectangleOperations.cpp)
 
 add_executable(QueryProcessing ${SOURCE_FILES})
 
