@@ -12,8 +12,8 @@ void QueryTree::setLeftIndexedObject(SpatialIndexInterface leftIndexedObject) {
 	this->leftIndexedObject = leftIndexedObject;
 }
 
-void QueryTree::setLeftFilter(vector<string> leftFilter) {
-	this->leftFilter = leftFilter;
+void QueryTree::setLeftFilter(vector<vector<string>> leftBranch) {
+	this->leftBranch = leftBranch;
 }
 
 void QueryTree::setRoot(vector<string> root) {
@@ -32,6 +32,6 @@ void QueryTree::setRightIndexedObject(SpatialIndexInterface rightIndexedObject) 
 	this->rightIndexedObject = rightIndexedObject;
 }
 
-void QueryTree::setRightFilter(vector<string> rightFilter) {
-	this->rightFilter = rightFilter;
+void QueryTree::setRightFilter(vector<vector<string>> rightBranch) {
+	this->rightBranch = rightBranch;
 }
