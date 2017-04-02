@@ -14,7 +14,6 @@
 #include "PointOperations.cpp"
 #include "RectangleOperations.cpp"
 
-#define NULL    ((void *)0)
 #define TYPE_POINT 1
 #define TYPE_RECTANGLE 2
 #define TYPE_POINTPOINT 3
@@ -47,7 +46,7 @@ public:
 		RectangleCollection rightDataRect = qTree.rightDataRect;
 
 		// left data is points
-		if (leftDataPoint != NULL && leftDataRect == NULL) {
+		if (!leftDataPoint.isEmpty() && leftDataRect.isEmpty()) {
 			PointCollection leftResult = materializeBranch(leftFilter, leftDataPoint);
 			// no right branch
 			if (root[0] == "") {
@@ -55,11 +54,15 @@ public:
 			}
 			else {
 				// right data is points
-				if (rightDataPoint != NULL && rightDataRect == NULL) {
+				if (!rightDataPoint.isEmpty() && rightDataRect.isEmpty()) {
 					PointCollection rightResult = materializeBranch(rightFilter, rightDataPoint);
 					if (root[0] == "knnJoin") {
+						PointPointCollection distanceJoinResult = knnJoin(root, leftResult, rightFilter, rightDataPoint);
+						queryResult.setPointPointCollection(distanceJoinResult);
 					}
 					else if (root[0] == "rangeJoin") {
+						PointPointCollection distanceJoinResult = rangeJoin(leftResult, rightFilter, rightDataPoint);
+						queryResult.setPointPointCollection(distanceJoinResult);
 					}
 					else if (root[0] == "distanceJoin") {
 						PointPointCollection distanceJoinResult = distanceJoin(root, leftResult, rightFilter, rightDataPoint);
@@ -67,11 +70,15 @@ public:
 					}
 				}
 				// right data is rectangles
-				else if (rightDataPoint == NULL && rightDataRect != NULL) {
+				else if (rightDataPoint.isEmpty() && !rightDataRect.isEmpty()) {
 					RectangleCollection leftResult = materializeBranch(rightFilter, rightDataRect);
 					if (root[0] == "knnJoin") {
+						PointRectangleCollection distanceJoinResult = knnJoin(root, leftResult, rightFilter, rightDataRect);
+						queryResult.setPointRectangleCollection(distanceJoinResult);
 					}
 					else if (root[0] == "rangeJoin") {
+						PointRectangleCollection distanceJoinResult = rangeJoin(leftResult, rightFilter, rightDataRect);
+						queryResult.setPointRectangleCollection(distanceJoinResult);
 					}
 					else if (root[0] == "distanceJoin") {
 						PointRectangleCollection distanceJoinResult = distanceJoin(root, leftResult, rightFilter, rightDataRect);
@@ -81,7 +88,7 @@ public:
 			}
 		}
 		// left data is rectangles
-		else if (leftDataPoint == NULL && leftDataRect != NULL) {
+		else if (leftDataPoint.isEmpty() && !leftDataRect.isEmpty()) {
 			RectangleCollection leftResult = materializeBranch(leftFilter, leftDataRect);
 			// no right branch
 			if (root[0] == "") {
@@ -89,13 +96,15 @@ public:
 			}
 			else {
 				// right data is points
-				if (rightDataPoint != NULL && rightDataRect == NULL) {
+				if (!rightDataPoint.isEmpty() && rightDataRect.isEmpty()) {
 					PointCollection rightResult = materializeBranch(rightFilter, rightDataPoint);
 					if (root[0] == "knnJoin") {
-
+						PointRectangleCollection distanceJoinResult = knnJoin(root, rightDataPoint, rightFilter, leftResult);
+						queryResult.setPointRectangleCollection(distanceJoinResult);
 					}
 					else if (root[0] == "rangeJoin") {
-
+						PointRectangleCollection distanceJoinResult = rangeJoin(rightDataPoint, rightFilter, leftResult);
+						queryResult.setPointRectangleCollection(distanceJoinResult);
 					}
 					else if (root[0] == "distanceJoin") {
 						PointRectangleCollection distanceJoinResult = distanceJoin(root, rightDataPoint, rightFilter, leftResult);
@@ -103,11 +112,15 @@ public:
 					}
 				}
 				// right data is rectangles
-				else if (rightDataPoint == NULL && rightDataRect != NULL) {
+				else if (rightDataPoint.isEmpty() && !rightDataRect.isEmpty()) {
 					RectangleCollection leftResult = materializeBranch(rightFilter, rightDataRect);
 					if (root[0] == "knnJoin") {
+						RectangleRectangleCollection distanceJoinResult = knnJoin(root, rightDataPoint, rightFilter, leftResult);
+						queryResult.setRectangleRectangleCollection(distanceJoinResult);
 					}
 					else if (root[0] == "rangeJoin") {
+						RectangleRectangleCollection distanceJoinResult = rangeJoin(rightDataPoint, rightFilter, leftResult);
+						queryResult.setRectangleRectangleCollection(distanceJoinResult);
 					}
 					else if (root[0] == "distanceJoin") {
 						RectangleRectangleCollection distanceJoinResult = distanceJoin(root, rightDataPoint, rightFilter, leftResult);
@@ -155,27 +168,39 @@ public:
 	}
 
 	PointPointCollection rangeJoin (PointCollection leftData, vector<vector<string>> filter, PointCollection rightData) {
-		return NULL;
+		vector<PointPoint> joinResultVector;
+		PointPointCollection distanceJoinResult(POINTPOINT,DB_NAME,TYPE_POINTPOINT,joinResultVector);
+		return distanceJoinResult;
 	}
 
 	RectangleRectangleCollection rangeJoin (RectangleCollection leftData, vector<vector<string>> filter, RectangleCollection rightData) {
-		return NULL;
+		vector<RectangleRectangle> joinResultVector;
+		RectangleRectangleCollection distanceJoinResult(RECTANGLERECTANGLE,DB_NAME,TYPE_RECTANGLERECTANGLE,joinResultVector);
+		return distanceJoinResult;
 	}
 
 	PointRectangleCollection rangeJoin (PointCollection leftData, vector<vector<string>> filter, RectangleCollection rightData) {
-		return NULL;
+		vector<PointRectangle> joinResultVector;
+		PointPointCollection distanceJoinResult(POINTRECTANGLE,DB_NAME,TYPE_POINTRECTANGLE,joinResultVector);
+		return distanceJoinResult;
 	}
 
 	PointPointCollection knnJoin (vector<string> root, PointCollection leftData, vector<vector<string>> filter, PointCollection rightData) {
-		return NULL;
+		vector<PointPoint> joinResultVector;
+		PointPointCollection distanceJoinResult(POINTPOINT,DB_NAME,TYPE_POINTPOINT,joinResultVector);
+		return distanceJoinResult;
 	}
 
 	RectangleRectangleCollection knnJoin (vector<string> root, RectangleCollection leftData, vector<vector<string>> filter, RectangleCollection rightData) {
-		return NULL;
+		vector<RectangleRectangle> joinResultVector;
+		RectangleRectangleCollection distanceJoinResult(RECTANGLERECTANGLE,DB_NAME,TYPE_RECTANGLERECTANGLE,joinResultVector);
+		return distanceJoinResult;
 	}
 
 	PointRectangleCollection knnJoin (vector<string> root, PointCollection leftData, vector<vector<string>> filter, RectangleCollection rightData) {
-		return NULL;
+		vector<PointRectangle> joinResultVector;
+		PointPointCollection distanceJoinResult(POINTRECTANGLE,DB_NAME,TYPE_POINTRECTANGLE,joinResultVector);
+		return distanceJoinResult;
 	}
 
 	PointPointCollection distanceJoin (vector<string> root, PointCollection leftData,
@@ -214,7 +239,7 @@ public:
 				}
 			}
 		}
-		PointPointCollection distanceJoinResult(RECTANGLERECTANGLE,DB_NAME,TYPE_RECTANGLERECTANGLE,joinResultVector);
+		RectangleRectangleCollection distanceJoinResult(RECTANGLERECTANGLE,DB_NAME,TYPE_RECTANGLERECTANGLE,joinResultVector);
 		return distanceJoinResult;
 	}
 
