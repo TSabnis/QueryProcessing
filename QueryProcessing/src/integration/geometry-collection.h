@@ -1,3 +1,5 @@
+#ifndef GEOMETRY_COLLECTION_H
+#define GEOMETRY_COLLECTION_H
 #include<vector>
 #include "geometry.h"
 using namespace std;
@@ -57,3 +59,5 @@ class RectangleRectangleCollection {
     RectangleRectangle getById(int);
     vector<RectangleRectangle> getNext(int n=1);
 };
+
+#endif

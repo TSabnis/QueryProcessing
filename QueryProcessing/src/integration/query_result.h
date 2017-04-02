@@ -1,3 +1,4 @@
+
 /*
  * query_result.h
  *

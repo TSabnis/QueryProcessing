@@ -1,5 +1,8 @@
+#ifndef HEADERFILES_QUERY_TREE_H_
+#define HEADERFILES_QUERY_TREE_H_
 #include <string>
-#include "geometry.h"
+#include "../integration/geometry.h"
+#include "../integration/geometry-collection.h"
 
 class QueryTree {
 public:
@@ -11,3 +14,5 @@ public:
 	PointCollection rightDataPoint;
 	RectangleCollection rightDataRect;
 };
+
+#endif

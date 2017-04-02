@@ -1,4 +1,6 @@
 #include "query-tree.h"
+#include "../integration/geometry.h"
+#include "../integration/geometry-collection.h"
 
 class QueryResult {
     int resultType;
