@@ -7,9 +7,9 @@
 
 #include <iostream>
 #include <vector>
-#include "query-tree.h"
 #include "query-processing.h"
 #include "geometry.h"
+#include "../integration/geometry.h"
 #include "OperatorDictionary.cpp"
 #include "PointOperations.cpp"
 #include "RectangleOperations.cpp"
@@ -38,8 +38,8 @@ public:
 	QueryResult processQuery (QueryTree qTree) {
 		QueryResult queryResult;
 		vector<string> root = qTree.root;
-		vector<vector<string>> leftFilter = qTree.leftFilter;
-		vector<vector<string>> rightFilter = qTree.rightFilter;
+		vector<vector<string>> leftFilter = qTree.leftBranch;
+		vector<vector<string>> rightFilter = qTree.rightBranch;
 		PointCollection leftDataPoint = qTree.leftDataPoint;
 		RectangleCollection leftDataRect = qTree.leftDataRect;
 		PointCollection rightDataPoint = qTree.rightDataPoint;

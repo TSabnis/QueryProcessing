@@ -6,11 +6,12 @@
  */
 
 #include <iostream>
+#include <string>
 #include <vector>
-#include "geometry.h"
+#include <cstdlib>
+#include "../integration/geometry.h"
 #include "PointOperations.cpp"
 #include "RectangleOperations.cpp"
-
 using namespace std;
 
 class OperatorDictionary {
