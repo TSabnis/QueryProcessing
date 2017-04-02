@@ -26,4 +26,13 @@ public:
     void setRightPoints(PointCollection);
     void setRightRectangles(RectangleCollection);
     void setRightIndexedObject(SpatialIndexInterface);
+	const vector<vector<string> >& getLeftBranch() const;
+	const PointCollection& getLeftDataPoint() const;
+	const RectangleCollection& getLeftDataRect() const;
+	SpatialIndexInterface getLeftIndexedObject() const;
+	const vector<vector<string> >& getRightBranch() const;
+	const PointCollection& getRightDataPoint() const;
+	const RectangleCollection& getRightDataRect() const;
+	SpatialIndexInterface getRightIndexedObject() const;
+	const vector<string>& getRoot() const;
 };
