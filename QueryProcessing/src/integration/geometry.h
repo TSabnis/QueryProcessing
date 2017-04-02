@@ -1,5 +1,8 @@
 #include <string>
 #include<vector>
+
+#ifndef GEOMETRY_H
+#define GEOMETRY_H
 using namespace std;
 
 class Rectangle {
@@ -13,7 +16,7 @@ class Rectangle {
     Rectangle getEnvelope();    
 };
 
-class Point {
+class Point{
     float x, y;
     int id;
   public:
@@ -58,3 +61,5 @@ class RectangleRectangle {
     vector<float> getCoordinates();
     vector<Rectangle> getRectangles();
 };
+
+#endif
