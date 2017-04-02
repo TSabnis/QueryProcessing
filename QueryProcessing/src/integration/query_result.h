@@ -6,7 +6,7 @@
  *      Author: vnikhil
  */
 
-#include "geometry.h"
+
 
 #ifndef HEADERFILES_QUERY_RESULT_H_
 #define HEADERFILES_QUERY_RESULT_H_

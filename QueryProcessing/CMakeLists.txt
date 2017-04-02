@@ -21,7 +21,7 @@ set(SOURCE_FILES
     src/query-processing/PointOperations.cpp
     src/query-processing/QueryProcessing.cpp
     src/query-processing/TestQueryProcessing.cpp
-    src/query-processing/RectangleOperations.cpp)
+    src/query-processing/RectangleOperations.cpp src/integration/PointOperations.h src/integration/RectangleOperations.h)
 
 add_executable(QueryProcessing ${SOURCE_FILES})
 

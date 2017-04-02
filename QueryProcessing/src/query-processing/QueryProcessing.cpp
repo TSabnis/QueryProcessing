@@ -11,8 +11,10 @@
 #include "../integration/query-processing.h"
 #include "../integration/geometry-collection.h"
 #include "OperatorDictionary.cpp"
-#include "PointOperations.cpp"
-#include "RectangleOperations.cpp"
+//#include "PointOperations.cpp"
+//#include "RectangleOperations.cpp"
+#include "../integration/RectangleOperations.h"
+#include "../integration/PointOperations.h"
 
 #define NULL    ((void *)0)
 #define TYPE_POINT 1

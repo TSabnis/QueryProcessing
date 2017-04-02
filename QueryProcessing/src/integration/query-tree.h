@@ -4,7 +4,7 @@
 #include "../integration/geometry.h"
 #include "../integration/geometry-collection.h"
 
-#include "spatial-index-interface.h"
+//#include "spatial-index-interface.h"
 
 
 class QueryTree {
@@ -15,8 +15,8 @@ class QueryTree {
     vector<string> rightFilter;
     PointCollection rightDataPoint;
     RectangleCollection rightDataRect;
-    SpatialIndexInterface rightIndexedObject;
-	SpatialIndexInterface leftIndexedObject;
+//    SpatialIndexInterface rightIndexedObject;
+//	SpatialIndexInterface leftIndexedObject;
 
 public:
     QueryTree();
@@ -24,11 +24,11 @@ public:
     void setLeftFilter(vector<string>);
     void setLeftPoints(PointCollection);
     void setLeftRectangles(RectangleCollection);
-    void setLeftIndexedObject(SpatialIndexInterface);
+//    void setLeftIndexedObject(SpatialIndexInterface);
     void setRightFilter(vector<string>);
     void setRightPoints(PointCollection);
     void setRightRectangles(RectangleCollection);
-    void setRightIndexedObject(SpatialIndexInterface);
+//    void setRightIndexedObject(SpatialIndexInterface);
 };
 
 #endif

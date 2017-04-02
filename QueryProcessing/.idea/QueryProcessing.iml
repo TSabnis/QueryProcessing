@@ -7,6 +7,8 @@
       <sourceFolder url="file://$MODULE_DIR$/src/query-processing/TestQueryProcessing.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/query-processing/PointOperations.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/query-processing/RectangleOperations.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/integration/PointOperations.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/integration/RectangleOperations.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/CMakeLists.txt" isTestSource="false" />
     </content>
     <orderEntry type="sourceFolder" forTests="false" />

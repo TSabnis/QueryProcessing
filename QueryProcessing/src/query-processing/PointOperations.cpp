@@ -4,7 +4,10 @@
 #include <boost/geometry/geometries/box.hpp>
 #include <boost/foreach.hpp>
 #include "../integration/geometry.h"
+#include "../integration/PointOperations.h"
+
 #include <vector>
+
 
 using namespace std;
 namespace bg = boost::geometry;
@@ -13,8 +16,7 @@ using namespace std;
 typedef bg::model::point<float, 2, bg::cs::cartesian> point;
 typedef bg::model::box<point> box;
 
-class PointOperations{
-public:
+
 	static bool isIntersecting (Point p, Rectangle rec){
 
 		return boost::geometry::intersects(point(p.getCoordinates().at(0), p.getCoordinates().at(1)), box(point(rec.getCoordinates().at(0),rec.getCoordinates().at(1)), point(rec.getCoordinates().at(2),rec.getCoordinates().at(3))));
@@ -50,4 +52,4 @@ public:
 		return boost::geometry::distance(point(point1.getCoordinates().at(0), point1.getCoordinates().at(1)), box(point(rec.getCoordinates().at(0),rec.getCoordinates().at(1)), point(rec.getCoordinates().at(2),rec.getCoordinates().at(3))));
 	}
 
-};
+
