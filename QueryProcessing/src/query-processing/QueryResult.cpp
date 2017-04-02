@@ -5,89 +5,68 @@
  *      Author: vnikhil
  */
 
-#include "../integration/geometry.h"
-#include "../integration/geometry-collection.h"
+#include "../integration/query-processing.h"
 
-class QueryResult {
+QueryResult::QueryResult() {
 
-	int resultType;
-	PointCollection pointCollection;
-	RectangleCollection rectangleCollection;
-	PointPointCollection pointPointCollection;
-	RectangleRectangleCollection rectangleRectangleCollection;
-	PointRectangleCollection pointRectangleCollection;
-	bool status;
+}
 
-public:
-	QueryResult();
-	virtual ~QueryResult();
+const PointCollection& QueryResult::getPointCollection() {
+	return pointCollection;
+}
 
-	public:
-		QueryResult(int, PointCollection);
-		QueryResult(int, RectangleCollection);
-		QueryResult(int, PointPointCollection);
-		QueryResult(int, RectangleRectangleCollection);
-		QueryResult(int, PointRectangleCollection);
-		QueryResult(int, bool);
-		QueryResult();
+void QueryResult::setPointCollection(const PointCollection& pointCollection) {
+	this->pointCollection = pointCollection;
+}
 
-		const PointCollection& getPointCollection() const {
-			return pointCollection;
-		}
+const PointPointCollection& QueryResult::getPointPointCollection() {
+	return pointPointCollection;
+}
 
-		void setPointCollection(const PointCollection& pointCollection) {
-			this->pointCollection = pointCollection;
-		}
+void QueryResult::setPointPointCollection(
+		const PointPointCollection& pointPointCollection) {
+	this->pointPointCollection = pointPointCollection;
+}
 
-		const PointPointCollection& getPointPointCollection() const {
-			return pointPointCollection;
-		}
+const PointRectangleCollection& QueryResult::getPointRectangleCollection() {
+	return pointRectangleCollection;
+}
 
-		void setPointPointCollection(
-				const PointPointCollection& pointPointCollection) {
-			this->pointPointCollection = pointPointCollection;
-		}
+void QueryResult::setPointRectangleCollection(
+		const PointRectangleCollection& pointRectangleCollection) {
+	this->pointRectangleCollection = pointRectangleCollection;
+}
 
-		const PointRectangleCollection& getPointRectangleCollection() const {
-			return pointRectangleCollection;
-		}
+const RectangleCollection& QueryResult::getRectangleCollection() {
+	return rectangleCollection;
+}
 
-		void setPointRectangleCollection(
-				const PointRectangleCollection& pointRectangleCollection) {
-			this->pointRectangleCollection = pointRectangleCollection;
-		}
+void QueryResult::setRectangleCollection(
+		const RectangleCollection& rectangleCollection) {
+	this->rectangleCollection = rectangleCollection;
+}
 
-		const RectangleCollection& getRectangleCollection() const {
-			return rectangleCollection;
-		}
+const RectangleRectangleCollection& QueryResult::getRectangleRectangleCollection() {
+	return rectangleRectangleCollection;
+}
 
-		void setRectangleCollection(
-				const RectangleCollection& rectangleCollection) {
-			this->rectangleCollection = rectangleCollection;
-		}
+void QueryResult::setRectangleRectangleCollection(
+		const RectangleRectangleCollection& rectangleRectangleCollection) {
+	this->rectangleRectangleCollection = rectangleRectangleCollection;
+}
 
-		const RectangleRectangleCollection& getRectangleRectangleCollection() const {
-			return rectangleRectangleCollection;
-		}
+int QueryResult::getResultType() {
+	return resultType;
+}
 
-		void setRectangleRectangleCollection(
-				const RectangleRectangleCollection& rectangleRectangleCollection) {
-			this->rectangleRectangleCollection = rectangleRectangleCollection;
-		}
+void QueryResult::setResultType(int resultType) {
+	this->resultType = resultType;
+}
 
-		int getResultType() const {
-			return resultType;
-		}
+bool QueryResult::isStatus() {
+	return status;
+}
 
-		void setResultType(int resultType) {
-			this->resultType = resultType;
-		}
-
-		bool isStatus() const {
-			return status;
-		}
-
-		void setStatus(bool status) {
-			this->status = status;
-		}
-};
+void QueryResult::setStatus(bool status) {
+	this->status = status;
+}

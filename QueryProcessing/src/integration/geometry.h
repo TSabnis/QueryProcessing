@@ -1,7 +1,3 @@
-
-
-#ifndef GEOMETRY_H
-#define GEOMETRY_H
 #include <string>
 #include<vector>
 using namespace std;
@@ -36,7 +32,7 @@ class PointPoint {
     int getId();
     void setId(int);
     vector<float> getCoordinates();
-    Point* getPoints();
+    vector<Point> getPoints();
 };
 
 class PointRectangle {
@@ -62,4 +58,3 @@ class RectangleRectangle {
     vector<float> getCoordinates();
     vector<Rectangle> getRectangles();
 };
-#endif
