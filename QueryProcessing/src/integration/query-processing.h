@@ -2,10 +2,10 @@
 
 class QueryTree {
     vector<string> root;
-    vector<vector<string>> leftBranch;
+    vector<vector<string> > leftBranch;
     PointCollection leftDataPoint;
     RectangleCollection leftDataRect;
-    vector<vector<string>> rightBranch;
+    vector<vector<string> > rightBranch;
     PointCollection rightDataPoint;
     RectangleCollection rightDataRect;
 //    SpatialIndexInterface rightIndexedObject;
@@ -14,11 +14,11 @@ class QueryTree {
 public:
     QueryTree();
     void setRoot(vector<string>);
-    void setLeftFilter(vector<vector<string>>);
+    void setLeftFilter(vector<vector<string> >);
     void setLeftPoints(PointCollection);
     void setLeftRectangles(RectangleCollection);
 //    void setLeftIndexedObject(SpatialIndexInterface);
-    void setRightFilter(vector<vector<string>>);
+    void setRightFilter(vector<vector<string> >);
     void setRightPoints(PointCollection);
     void setRightRectangles(RectangleCollection);
 //    void setRightIndexedObject(SpatialIndexInterface);
@@ -65,16 +65,16 @@ public:
     static bool isEqual (Point point1, Point point2);
     static bool isDisjoint (Point point1, Point point2);
     static bool isWithin (Point point1, Rectangle rec);
-    //static bool isOverlapping (Point point1, Point point2);
-    //static double getDistance (Point point1, Point point2);
-    //static double getDistance (Point point1, Rectangle rec);
+    static bool isOverlapping (Point point1, Point point2);
+    static bool isOverlapping (Point point1, Rectangle rec);
+    static double getDistance (Point point1, Point point2);
+    static double getDistance (Point point1, Rectangle rec);
 
 };
 
 class RectangleOperations{
 public:
     static bool isIntersecting (Rectangle rec1, Rectangle rec2);
-
     static bool isEqual (Rectangle rec1, Rectangle rec2);
     static bool isDisjoint (Rectangle rec1, Rectangle rec2);
     static bool isWithin (Rectangle rec1, Rectangle rec2);
@@ -101,34 +101,34 @@ public:
 
 	QueryResult processQuery (QueryTree qTree);
 
-	PointCollection materializeBranch (vector<vector<string>> filter, PointCollection data);
+	PointCollection materializeBranch (vector<vector<string> > filter, PointCollection data);
 
-	RectangleCollection materializeBranch (vector<vector<string>> filter, RectangleCollection data);
+	RectangleCollection materializeBranch (vector<vector<string> > filter, RectangleCollection data);
 
-	PointPointCollection rangeJoin (PointCollection leftData, vector<vector<string>> filter, PointCollection rightData);
+	PointPointCollection rangeJoin (PointCollection leftData, vector<vector<string> > filter, PointCollection rightData);
 
 	RectangleRectangleCollection rangeJoin (
-			RectangleCollection leftData, vector<vector<string>> filter, RectangleCollection rightData);
+			RectangleCollection leftData, vector<vector<string> > filter, RectangleCollection rightData);
 
 	PointRectangleCollection rangeJoin (
-			PointCollection leftData, vector<vector<string>> filter, RectangleCollection rightData);
+			PointCollection leftData, vector<vector<string> > filter, RectangleCollection rightData);
 
 	PointPointCollection knnJoin (
-			vector<string> root, PointCollection leftData, vector<vector<string>> filter, PointCollection rightData);
+			vector<string> root, PointCollection leftData, vector<vector<string> > filter, PointCollection rightData);
 
 	RectangleRectangleCollection knnJoin (
-			vector<string> root, RectangleCollection leftData, vector<vector<string>> filter, RectangleCollection rightData);
+			vector<string> root, RectangleCollection leftData, vector<vector<string> > filter, RectangleCollection rightData);
 
 	PointRectangleCollection knnJoin (
-			vector<string> root, PointCollection leftData, vector<vector<string>> filter, RectangleCollection rightData);
+			vector<string> root, PointCollection leftData, vector<vector<string> > filter, RectangleCollection rightData);
 
 	PointPointCollection distanceJoin (vector<string> root, PointCollection leftData,
-			vector<vector<string>> filter, PointCollection rightData);
+			vector<vector<string> > filter, PointCollection rightData);
 
 	RectangleRectangleCollection distanceJoin (vector<string> root, RectangleCollection leftData,
-			vector<vector<string>> filter, RectangleCollection rightData);
+			vector<vector<string> > filter, RectangleCollection rightData);
 
 	PointRectangleCollection distanceJoin (vector<string> root, PointCollection leftData,
-			vector<vector<string>> filter, RectangleCollection rightData);
+			vector<vector<string> > filter, RectangleCollection rightData);
 
 };
