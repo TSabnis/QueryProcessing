@@ -19,12 +19,12 @@ bool OperatorDictionary::applyFilterBy (vector<string> filterDetails, Point inpu
 	if (filterDetails[1] == "distance") {
 		double metricVal;
 		if (filterDetails.size()==8) {
-			metricVal = 0;//PointOperations::getDistance(inputPoint,
-				//Rectangle(stod(filterDetails[4]),stod(filterDetails[5]),stod(filterDetails[6]),stod(filterDetails[7])));
+			metricVal = PointOperations::getDistance(inputPoint,
+				Rectangle(stod(filterDetails[4]),stod(filterDetails[5]),stod(filterDetails[6]),stod(filterDetails[7])));
 		}
 		else {
-			metricVal = 0;//PointOperations::getDistance(inputPoint,
-				//Point(stod(filterDetails[4]),stod(filterDetails[5])));
+			metricVal = PointOperations::getDistance(inputPoint,
+				Point(stod(filterDetails[4]),stod(filterDetails[5])));
 		}
 		if(operatorName == "gt" && metricVal > compareVal)
 			isCriterionSatisfied = true;
@@ -48,11 +48,11 @@ bool OperatorDictionary::applyFilterBy (vector<string> filterDetails, Rectangle 
 	if (filterDetails[1] == "distance") {
 		double metricVal;
 		if (filterDetails.size()==8) {
-			metricVal = 0;//RectangleOperations::getDistance(inputRect,
-				//Rectangle(stod(filterDetails[4]),stod(filterDetails[5]),stod(filterDetails[6]),stod(filterDetails[7])));
+			metricVal = RectangleOperations::getDistance(inputRect,
+				Rectangle(stod(filterDetails[4]),stod(filterDetails[5]),stod(filterDetails[6]),stod(filterDetails[7])));
 		}
 		else {
-			metricVal = 0;//PointOperations::getDistance(Point(stod(filterDetails[4]),stod(filterDetails[5])), inputRect);
+			metricVal = PointOperations::getDistance(Point(stod(filterDetails[4]),stod(filterDetails[5])), inputRect);
 		}
 		if(operatorName == "gt" && metricVal > compareVal)
 			isCriterionSatisfied = true;

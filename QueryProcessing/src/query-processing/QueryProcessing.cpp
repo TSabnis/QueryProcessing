@@ -200,11 +200,11 @@ PointPointCollection QueryProcessing::distanceJoin (vector<string> root, PointCo
 	vector<Point> rightPoints = rightData.getNext(rightData.getSize());
 	for (int i=0;i<leftPoints.size();i++) {
 		for (int j=0;j<rightPoints.size();j++) {
-			/*if (PointOperations::getDistance(leftPoints[i],rightPoints[j]) <= distThresh) {
+			if (PointOperations::getDistance(leftPoints[i],rightPoints[j]) <= distThresh) {
 				PointPoint pp(leftPoints[i].getCoordinates()[0],leftPoints[i].getCoordinates()[1],
 						rightPoints[j].getCoordinates()[0],rightPoints[j].getCoordinates()[1]);
 				joinResultVector.insert(joinResultVector.end(),pp);
-			}*/
+			}
 		}
 	}
 	PointPointCollection distanceJoinResult(POINTPOINT,DB_NAME,TYPE_POINTPOINT,joinResultVector);
@@ -219,13 +219,13 @@ RectangleRectangleCollection QueryProcessing::distanceJoin (vector<string> root,
 	vector<Rectangle> rightRects = rightData.getNext(rightData.getSize());
 	for (int i=0;i<leftRects.size();i++) {
 		for (int j=0;j<rightRects.size();j++) {
-			/*if (RectangleOperations::getDistance(leftRects[i],rightRects[j]) <= distThresh) {
+			if (RectangleOperations::getDistance(leftRects[i],rightRects[j]) <= distThresh) {
 				RectangleRectangle rr(leftRects[i].getCoordinates()[0],leftRects[i].getCoordinates()[1],
 						leftRects[i].getCoordinates()[2],leftRects[i].getCoordinates()[3],
 						rightRects[j].getCoordinates()[0],rightRects[j].getCoordinates()[1],
 						rightRects[j].getCoordinates()[2],rightRects[j].getCoordinates()[3]);
 				joinResultVector.insert(joinResultVector.end(),rr);
-			}*/
+			}
 		}
 	}
 	RectangleRectangleCollection distanceJoinResult(RECTANGLERECTANGLE,DB_NAME,TYPE_RECTANGLERECTANGLE,joinResultVector);
@@ -240,12 +240,12 @@ PointRectangleCollection QueryProcessing::distanceJoin (vector<string> root, Poi
 	vector<Rectangle> rightRects = rightData.getNext(rightData.getSize());
 	for (int i=0;i<leftPoints.size();i++) {
 		for (int j=0;j<rightRects.size();j++) {
-			/*if (PointOperations::getDistance(leftPoints[i],rightRects[j]) <= distThresh) {
+			if (PointOperations::getDistance(leftPoints[i],rightRects[j]) <= distThresh) {
 				PointRectangle pr(leftPoints[i].getCoordinates()[0],leftPoints[i].getCoordinates()[1],
 						rightRects[j].getCoordinates()[0],rightRects[j].getCoordinates()[1],
 						rightRects[j].getCoordinates()[2],rightRects[j].getCoordinates()[3]);
 				joinResultVector.insert(joinResultVector.end(),pr);
-			}*/
+			}
 		}
 	}
 	PointRectangleCollection distanceJoinResult(POINTRECTANGLE,DB_NAME,TYPE_POINTRECTANGLE,joinResultVector);

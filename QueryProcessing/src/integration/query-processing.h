@@ -66,8 +66,8 @@ public:
     static bool isDisjoint (Point point1, Point point2);
     static bool isWithin (Point point1, Rectangle rec);
     //static bool isOverlapping (Point point1, Point point2);
-    //static double getDistance (Point point1, Point point2);
-    //static double getDistance (Point point1, Rectangle rec);
+    static double getDistance (Point point1, Point point2);
+    static double getDistance (Point point1, Rectangle rec);
 
 };
 
@@ -79,8 +79,8 @@ public:
     static bool isDisjoint (Rectangle rec1, Rectangle rec2);
     static bool isWithin (Rectangle rec1, Rectangle rec2);
     //static bool isOverlapping (Rectangle rec1, Rectangle rec2);
-    //static double getDistance (Rectangle rec1, Rectangle rec2);
-    static double getArea (Rectangle rec1);
+    static double getDistance (Rectangle rec1, Rectangle rec2);
+    //static double getArea (Rectangle rec1);
 
 };
 
