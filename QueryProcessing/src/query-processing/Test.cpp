@@ -8,16 +8,9 @@
 #include <iostream>
 #include "../integration/query-processing.h"
 
-#define TYPE_NULL 0
-#define TYPE_POINT 1
-#define TYPE_RECTANGLE 2
-#define TYPE_POINTPOINT 3
-#define TYPE_POINTRECTANGLE 4
-#define TYPE_RECTANGLERECTANGLE 5
-
 int main() {
 
-	Point pt0();
+		Point pt0();
 		Point pt1(3,3);
 		Point pt2(6,6);
 		Point pt3(3,3);
