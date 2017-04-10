@@ -1,5 +1,9 @@
 #include "../integration/query-processing.h"
 
+QueryTree::QueryTree() {
+
+}
+
 void QueryTree::setLeftPoints(PointCollection leftPoints) {
 	this->leftDataPoint = leftPoints;
 }

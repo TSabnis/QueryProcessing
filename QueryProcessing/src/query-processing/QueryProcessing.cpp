@@ -24,6 +24,7 @@ QueryResult QueryProcessing::processQuery (QueryTree qTree) {
 
 	// left data is points
 	if (!leftDataPoint.isEmpty() && leftDataRect.isEmpty()) {
+		cout<<"Materializing left points"<<endl;
 		PointCollection leftResult = materializeBranch(leftFilter, leftDataPoint);
 		// no right branch
 		if (root[0] == "") {
@@ -33,6 +34,7 @@ QueryResult QueryProcessing::processQuery (QueryTree qTree) {
 		else {
 			// right data is points
 			if (!rightDataPoint.isEmpty() && rightDataRect.isEmpty()) {
+				cout<<"Materializing right points"<<endl;
 				PointCollection rightResult = materializeBranch(rightFilter, rightDataPoint);
 				if (root[0] == "knnJoin") {
 					PointPointCollection distanceJoinResult = knnJoin(root, leftResult, rightFilter, rightResult);
@@ -45,6 +47,7 @@ QueryResult QueryProcessing::processQuery (QueryTree qTree) {
 					queryResult.setResultType(3);
 				}
 				else if (root[0] == "distanceJoin") {
+					cout<<"Calling PointPoint distance join"<<endl;
 					PointPointCollection distanceJoinResult = distanceJoin(root, leftResult, rightFilter, rightResult);
 					queryResult.setPointPointCollection(distanceJoinResult);
 					queryResult.setResultType(3);
@@ -52,6 +55,7 @@ QueryResult QueryProcessing::processQuery (QueryTree qTree) {
 			}
 			// right data is rectangles
 			else if (rightDataPoint.isEmpty() && !rightDataRect.isEmpty()) {
+				cout<<"Materializing right rectangles"<<endl;
 				RectangleCollection rightResult = materializeBranch(rightFilter, rightDataRect);
 				if (root[0] == "knnJoin") {
 					PointRectangleCollection distanceJoinResult = knnJoin(root, leftResult, rightFilter, rightResult);
@@ -73,6 +77,7 @@ QueryResult QueryProcessing::processQuery (QueryTree qTree) {
 	}
 	// left data is rectangles
 	else if (leftDataPoint.isEmpty() && !leftDataRect.isEmpty()) {
+		cout<<"Materializing left rectangles"<<endl;
 		RectangleCollection leftResult = materializeBranch(leftFilter, leftDataRect);
 		// no right branch
 		if (root[0] == "") {
@@ -82,6 +87,7 @@ QueryResult QueryProcessing::processQuery (QueryTree qTree) {
 		else {
 			// right data is points
 			if (!rightDataPoint.isEmpty() && rightDataRect.isEmpty()) {
+				cout<<"Materializing right points"<<endl;
 				PointCollection rightResult = materializeBranch(rightFilter, rightDataPoint);
 				if (root[0] == "knnJoin") {
 					PointRectangleCollection distanceJoinResult = knnJoin(root, rightResult, rightFilter, leftResult);
@@ -101,6 +107,7 @@ QueryResult QueryProcessing::processQuery (QueryTree qTree) {
 			}
 			// right data is rectangles
 			else if (rightDataPoint.isEmpty() && !rightDataRect.isEmpty()) {
+				cout<<"Materializing right rectangles"<<endl;
 				RectangleCollection rightResult = materializeBranch(rightFilter, rightDataRect);
 				if (root[0] == "knnJoin") {
 					RectangleRectangleCollection distanceJoinResult = knnJoin(root, rightResult, rightFilter, leftResult);
@@ -127,16 +134,19 @@ QueryResult QueryProcessing::processQuery (QueryTree qTree) {
 PointCollection QueryProcessing::materializeBranch (vector<vector<string>> filter, PointCollection data) {
 	// initialize result
 	PointCollection result;
-	vector<Point> points = data.getNext(1);
-	while (points.size()!=0) {
+	vector<Point> points = data.getNext(data.getSize());
+	int j = 0;
+	cout<<"Size of collection is: "<<data.getSize()<<endl;
+	while (j < data.getSize()) {
 		bool passedAllOperators = true;
 		for (int i=0;i<filter.size();i++) {
-			passedAllOperators = passedAllOperators && opDict.applyOperator(filter[i],points[0]);
+			passedAllOperators = passedAllOperators && opDict.applyOperator(filter[i],points[j]);
 		}
 		if (passedAllOperators) {
-			result.insert(points[0]);
+			cout<<"This point passed all filters: "<<points[j].getCoordinates()[0]<<" "<<points[j].getCoordinates()[1]<<endl;
+			result.insert(points[j]);
 		}
-		points = data.getNext(1);
+		j++;
 	}
 	return result;
 }
@@ -200,11 +210,13 @@ PointPointCollection QueryProcessing::distanceJoin (vector<string> root, PointCo
 	vector<PointPoint> joinResultVector;
 	vector<Point> leftPoints = leftData.getNext(leftData.getSize());
 	vector<Point> rightPoints = rightData.getNext(rightData.getSize());
+	cout<<"Starting nested loop for PointPoint distance join"<<endl;
 	for (int i=0;i<leftPoints.size();i++) {
 		for (int j=0;j<rightPoints.size();j++) {
 			if (PointOperations::getDistance(leftPoints[i],rightPoints[j]) <= distThresh) {
 				PointPoint pp(leftPoints[i].getCoordinates()[0],leftPoints[i].getCoordinates()[1],
 						rightPoints[j].getCoordinates()[0],rightPoints[j].getCoordinates()[1]);
+				cout<<"Adding PointPoint to result vector"<<endl;
 				joinResultVector.insert(joinResultVector.end(),pp);
 			}
 		}

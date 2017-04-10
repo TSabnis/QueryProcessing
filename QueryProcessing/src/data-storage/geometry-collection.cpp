@@ -13,7 +13,8 @@ using namespace std;
 PointCollection::PointCollection() {
 	name = "";
 	databaseName = "";
-	collectionStructure = 0;
+	collectionStructure = 1;
+	points = {};
 }
 
 PointCollection::PointCollection(string tname, string dbName,int collType, vector<Point> v_points) {
@@ -84,7 +85,7 @@ string PointCollection::getTableName() {
 RectangleCollection::RectangleCollection() {
 	name = "";
 	databaseName = "";
-	collectionStructure = 0;
+	collectionStructure = 2;
 }
 
 RectangleCollection::RectangleCollection(string tname, string dbName,int collType, vector<Rectangle> v_rects) {
@@ -159,7 +160,7 @@ string RectangleCollection::getTableName() {
 PointPointCollection::PointPointCollection() {
 	name = "";
 	databaseName = "";
-	collectionStructure = 0;
+	collectionStructure = 3;
 }
 
 PointPointCollection::PointPointCollection(string tname, string dbName,int collType, vector<PointPoint> v_ppoints) {
@@ -231,7 +232,7 @@ string PointPointCollection::getTableName() {
 PointRectangleCollection::PointRectangleCollection() {
 	name = "";
 	databaseName = "";
-	collectionStructure = 0;
+	collectionStructure = 4;
 }
 
 PointRectangleCollection::PointRectangleCollection(string tname, string dbName,int collType, vector<PointRectangle> v_prects) {
@@ -303,7 +304,7 @@ string PointRectangleCollection::getTableName() {
 RectangleRectangleCollection::RectangleRectangleCollection() {
 	name = "";
 	databaseName = "";
-	collectionStructure = 0;
+	collectionStructure = 5;
 }
 
 RectangleRectangleCollection::RectangleRectangleCollection(string tname, string dbName,int collType, vector<RectangleRectangle> v_prects) {
