@@ -1,107 +1,174 @@
-/*
- * PointOperationsTest.cpp
- *
- *  Created on: Apr 2, 2017
- *      Author: Nikhil Vementala
- */
 #include <iostream>
-#include "../integration/query-processing.h"
+#include <string>
+#include <map>
+#include <vector>
+
+#include "../integration/geometry.h"
+//#include "../integration/geometry.cpp"
+
+#include "../query-processing/PointOperations.cpp"
+
 using namespace std;
 
-bool pointOperationTests(){
-	Point pt0();
-	Point pt1(3,3);
-	Point pt2(6,6);
-	Point pt3(3,3);
+class PointOperationsTest {
+public:
+	PointOperationsTest() {
 
-	Rectangle rec0();
-	Rectangle rec1(1,1,4,4);
-	Rectangle rec2(3,3,9,9);
-	Rectangle rec3(5,5,7,7);
+	}
+	PointOperationsTest(Point pt1, Point pt2) {
 
-	int result = -1;
-	int expected = -1;
+	}
+	static void isIntersectingTest(Point pt1, Rectangle rec1,
+			bool expectedOutput) {
+		//bool expectedOutput;
+		bool actualOutput;
+		actualOutput = PointOperations::isIntersecting(pt1, rec1);
+		//actualOutput = isIntersecting(pt1, pt2);
 
-	result = PointOperations::isIntersecting(pt1,rec1);
-	expected = 1;
-	cout<< (result == expected ? "Test Case 1 passed\n" : "Test Case 1 failed\n");
+		cout << actualOutput << endl;
+		if (expectedOutput == actualOutput) {
+			cout << "Working Fine" << endl;
+		} else {
+			cout << "Not Working" << endl;
+		}
 
-	result = PointOperations::isIntersecting(pt1,rec2);
-	expected = 1;
-	cout<< (result == expected ? "Test Case 2 passed\n" : "Test Case 2 failed\n");
+	}
+	static void isEqualTest(Point pt1, Point pt2, bool expectedOutput) {
+		//bool expectedOutput;
+		bool actualOutput;
+		actualOutput = PointOperations::isEqual(pt1, pt2);
+		//actualOutput = isEqual(pt1, pt2);
 
-	result = PointOperations::isEqual(pt1,pt2);
-	expected = 0;
-	cout<< (result == expected ? "Test Case 3 passed\n" : "Test Case 3 failed\n");
+		cout << actualOutput << endl;
+		if (expectedOutput == actualOutput) {
+			cout << "Working Fine" << endl;
+		} else {
+			cout << "Not Working" << endl;
+		}
 
-	result = PointOperations::isEqual(pt1,pt3);
-	expected = 1;
-	cout<< (result == expected ? "Test Case 4 passed\n" : "Test Case 4 failed\n");
+	}
+	static void isDisjointTest(Point pt1, Point pt2, bool expectedOutput) {
+		//bool expectedOutput;
+		bool actualOutput;
+		actualOutput = PointOperations::isDisjoint(pt1, pt2);
+		//actualOutput = isDisjoint(pt1, pt2);
 
-	result = PointOperations::isDisjoint(pt1,pt2);
-	expected = 1;
-	cout<< (result == expected ? "Test Case 5 passed\n" : "Test Case 5 failed\n");
+		cout << actualOutput << endl;
+		if (expectedOutput == actualOutput) {
+			cout << "Working Fine" << endl;
+		} else {
+			cout << "Not Working" << endl;
+		}
 
-	result = PointOperations::isDisjoint(pt1,pt3);
-	expected = 0;
-	cout<< (result == expected ? "Test Case 6 passed\n" : "Test Case 6 failed\n");
+	}
+	static void isWithinTest(Point pt1, Rectangle rec1, bool expectedOutput) {
+		//bool expectedOutput;
+		bool actualOutput;
+		actualOutput = PointOperations::isWithin(pt1, rec1);
 
-	result = PointOperations::isWithin(pt1,rec1);
-	expected = 1;
-	cout<< (result == expected ? "Test Case 7 passed\n" : "Test Case 7 failed\n");
+		//actualOutput = isWithin(pt1, pt2);
+		cout << actualOutput << endl;
 
-	result = PointOperations::isWithin(pt1,rec2);
-	expected = 0;
-	cout<< (result == expected ? "Test Case 8 passed\n" : "Test Case 8 failed\n");
+		if (expectedOutput == actualOutput) {
+			cout << "Working Fine" << endl;
+		} else {
+			cout << "Not Working" << endl;
+		}
 
-	result = PointOperations::isWithin(pt1,rec3);
-	expected = 0;
-	cout<< (result == expected ? "Test Case 9 passed\n" : "Test Case 9 failed\n");
+	}
 
-	result = PointOperations::isOverlapping(pt1,rec1);
-	expected = 1;
-	cout<< (result == expected ? "Test Case 10 passed\n" : "Test Case 10 failed\n");
+	static void isOverlappingTest(Point pt1, Point pt2, bool expectedOutput) {
+		//bool expectedOutput;
+		bool actualOutput;
+		actualOutput = PointOperations::isOverlapping(pt1, pt2);
+		//actualOutput = isOverlapping(pt1, pt2);
+		cout << actualOutput << endl;
 
-	result = PointOperations::isOverlapping(pt1,rec2);
-	expected = 0;
-	cout<< (result == expected ? "Test Case 11 passed\n" : "Test Case 11 failed\n");
+		if (expectedOutput == actualOutput) {
+			cout << "Working Fine" << endl;
+		} else {
+			cout << "Not Working" << endl;
+		}
 
-	result = PointOperations::isOverlapping(pt1,rec3);
-	expected = 0;
-	cout<< (result == expected ? "Test Case 12 passed\n" : "Test Case 12 failed\n");
+	}
+	static void isOverlappingTest(Point pt1, Rectangle rec1,
+			bool expectedOutput) {
+		//bool expectedOutput;
+		bool actualOutput;
+		actualOutput = PointOperations::isOverlapping(pt1, rec1);
+		//actualOutput = isOverlapping(pt1, pt2);
+		cout << actualOutput << endl;
 
-	result = PointOperations::isOverlapping(pt1,pt3);
-	expected = 0;
-	cout<< (result == expected ? "Test Case 13 passed\n" : "Test Case 13 failed\n");
+		if (expectedOutput == actualOutput) {
+			cout << "Working Fine" << endl;
+		} else {
+			cout << "Not Working" << endl;
+		}
 
-	result = PointOperations::isOverlapping(pt1,pt2);
-	expected = 0;
-	cout<< (result == expected ? "Test Case 14 passed\n" : "Test Case 14 failed\n");
+	}
+	static void getDistanceTest(Point pt1, Point pt2, float expectedOutput) {
+		//float expectedOutput;
+		float actualOutput;
+		actualOutput = PointOperations::getDistance(pt1, pt2);
+		//actualOutput = getDistance(pt1, pt2);
+		cout << actualOutput << endl;
 
+		if (expectedOutput == actualOutput) {
+			cout << "Working Fine" << endl;
+		} else {
+			cout << "Not Working" << endl;
+		}
 
-	Point pt4(0,5);
-	Point pt5(0,5);
-	Point pt6(0,9);
-	Point pt7(5,5);
+	}
+	static void getDistanceTest(Point pt1, Rectangle rec1,
+			float expectedOutput) {
+		//float expectedOutput;
+		float actualOutput;
+		actualOutput = PointOperations::getDistance(pt1, rec1);
+		//actualOutput = getDistance(pt1, pt2);
+		cout << actualOutput << endl;
 
-	result = PointOperations::getDistance(pt4,pt6);
-	expected = 4;
-	cout<< (result == expected ? "Test Case 15 passed\n" : "Test Case 15 failed\n");
+		if (expectedOutput == actualOutput) {
+			cout << "Working Fine" << endl;
+		} else {
+			cout << "Not Working" << endl;
+		}
 
-	result = PointOperations::getDistance(pt4,pt5);
-	expected = 0;
-	cout<< (result == expected ? "Test Case 16 passed\n" : "Test Case 16 failed\n");
+	}
 
-	result = PointOperations::getDistance(pt4,pt7);
-	expected = 5;
-	cout<< (result == expected ? "Test Case 17 passed\n" : "Test Case 17 failed\n");
+};
+int main() {
+	Point pt1(3, 3);
+	Point pt2(6, 6);
+	Point pt3(3, 3);
+	Rectangle rec1(1, 1, 4, 4);
+	Rectangle rec2(3, 3, 9, 9);
+	Rectangle rec3(5, 5, 7, 7);
+	PointOperationsTest::isIntersectingTest(pt1, rec1, true);
+	PointOperationsTest::isIntersectingTest(pt1, rec2, false);
+	PointOperationsTest::isEqualTest(pt1, pt2, false);
+	PointOperationsTest::isEqualTest(pt1, pt3, true);
+	PointOperationsTest::isDisjointTest(pt1, pt2, true);
+	PointOperationsTest::isDisjointTest(pt1, pt3, false);
+	PointOperationsTest::isWithinTest(pt1, rec1, true);
+	PointOperationsTest::isWithinTest(pt1, rec2, true);
+	PointOperationsTest::isWithinTest(pt1, rec3, false);
+	PointOperationsTest::isOverlappingTest(pt1, rec1, true);
+	PointOperationsTest::isOverlappingTest(pt1, rec2, true);
+	PointOperationsTest::isOverlappingTest(pt1, rec3, false);
+	PointOperationsTest::isOverlappingTest(pt1, pt3, true);
+	PointOperationsTest::isOverlappingTest(pt1, pt2, false);
 
+	Point pt4(0, 5);
+	Point pt5(0, 5);
+	Point pt6(0, 9);
+	Point pt7(5, 5);
+	PointOperationsTest::getDistanceTest(pt4, pt6, 4);
+	PointOperationsTest::getDistanceTest(pt4, pt5, 0);
+	PointOperationsTest::getDistanceTest(pt4, pt7, 5);
 
-	Rectangle rec4(6,6,10,12);
-	result = PointOperations::getDistance(pt7,rec4);
-	expected = 5;
-	cout<< (result == expected ? "Test Case 18 passed\n" : "Test Case 18 failed\n");
+	Rectangle rec4(6, 6, 10, 11);
+	PointOperationsTest::getDistanceTest(pt7, rec4, 1);
 
-	return true;
+	return 0;
 }
-
