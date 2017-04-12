@@ -82,6 +82,23 @@ bool OperatorDictionary::applyFilterBy (Filter filterDetails, Rectangle inputRec
 	return isCriterionSatisfied;
 }
 
+bool OperatorDictionary::checkIfInRange(Filter rangeFilter, Point inputPoint){
+	Rectangle rec(rangeFilter.inputParams[0], rangeFilter.inputParams[1],
+			rangeFilter.inputParams[2], rangeFilter.inputParams[3]);
+	return PointOperations::isWithin(inputPoint, rec) ||
+				PointOperations::isOverlapping(inputPoint,rec) ||
+						PointOperations::isIntersecting(inputPoint,rec);
+}
+
+bool OperatorDictionary::checkIfInRange(Filter rangeFilter, Rectangle inputRect){
+	Rectangle rec(rangeFilter.inputParams[0], rangeFilter.inputParams[1],
+				rangeFilter.inputParams[2], rangeFilter.inputParams[3]);
+	return RectangleOperations::isOverlapping(inputRect,rec) ||
+			RectangleOperations::isIntersecting(inputRect,rec) ||
+			RectangleOperations::isWithin(inputRect,rec) ||
+			RectangleOperations::isWithin(rec,inputRect);
+}
+
 bool OperatorDictionary::applyOperator (Filter filterDetails, Point inputPoint) {
 	if (filterDetails.filterType == KNN ) {
 		return false;

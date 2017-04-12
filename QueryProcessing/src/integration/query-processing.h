@@ -140,6 +140,8 @@ class OperatorDictionary {
 public:
 	bool applyFilterBy (Filter filterDetails, Point inputPoint);
 	bool applyFilterBy (Filter filterDetails, Rectangle inputRect);
+	bool checkIfInRange(Filter rangeFilter, Point inputPoint);
+	bool checkIfInRange(Filter rangeFilter, Rectangle inputRect);
 	bool applyOperator (Filter filterDetails, Point inputPoint);
 	bool applyOperator (Filter filterDetails, Rectangle inputRect);
 };
@@ -174,6 +176,9 @@ public:
 	PointRectangleCollection knnJoin (
 			float k, PointCollection leftData, vector<Filter> filter, RectangleCollection rightData);
 
+	PointRectangleCollection knnJoin (
+				float k, RectangleCollection leftData, vector<Filter> filter, PointCollection rightData);
+
 	PointPointCollection distanceJoin (float distThresh, PointCollection leftData,
 			vector<Filter> filter, PointCollection rightData);
 
@@ -182,6 +187,14 @@ public:
 
 	PointRectangleCollection distanceJoin (float distThresh, PointCollection leftData,
 			vector<Filter> filter, RectangleCollection rightData);
+
+	vector<Point> getKnnPointsFromPoint (int k, Point inputPoint, vector<Point> inputPoints);
+
+	vector<Point> getKnnPointsFromRectangle (int k, Rectangle inputRect, vector<Point> inputPoints);
+
+	vector<Rectangle> getKnnRectanglesFromPoint (int k, Point inputPoint, vector<Rectangle> inputRectangles);
+
+	vector<Rectangle> getKnnRectanglesFromRectangle (int k, Rectangle inputRect, vector<Rectangle> inputRectangles);
 
 };
 
