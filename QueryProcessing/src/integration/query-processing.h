@@ -1,6 +1,6 @@
 
 #ifndef DATA_STORAGE_H
-#include "../data-storage/data-storage.h"
+#include "../integration/catalog.h"
 #endif
 
 #ifndef QUERY_PROCESSING_H
@@ -19,22 +19,30 @@
 #define RECTANGLERECTANGLE "RECTANGLERECTANGLE"
 #define DB_NAME ""
 
-#define NO_JOIN 1
-#define RANGE_JOIN 2
-#define KNN_JOIN 3
-#define DISTANCE_JOIN 4
+#define NO_JOIN '1'
+#define RANGE_JOIN '2'
+#define KNN_JOIN '3'
+#define DISTANCE_JOIN '4'
+#define NO_JOIN_SI 'A'
+#define RANGE_JOIN_SI 'B'
+#define KNN_JOIN_SI 'C'
+#define DISTANCE_JOIN_SI 'D'
+#define NO_JOIN_DI 'E'
+#define RANGE_JOIN_DI 'F'
+#define KNN_JOIN_DI 'G'
+#define DISTANCE_JOIN_DI 'H'
 
-#define FILTER_BY_AREA_LT 1
-#define FILTER_BY_AREA_LE 2
-#define FILTER_BY_AREA_EQ 3
-#define FILTER_BY_AREA_GT 4
-#define FILTER_BY_AREA_GE 5
+#define FILTER_BY_AREA_LT 'a'
+#define FILTER_BY_AREA_LE 'b'
+#define FILTER_BY_AREA_EQ 'c'
+#define FILTER_BY_AREA_GT 'd'
+#define FILTER_BY_AREA_GE 'e'
 
-#define FILTER_BY_DISTANCE_LT 6
-#define FILTER_BY_DISTANCE_LE 7
-#define FILTER_BY_DISTANCE_EQ 8
-#define FILTER_BY_DISTANCE_GT 9
-#define FILTER_BY_DISTANCE_GE 10
+#define FILTER_BY_DISTANCE_LT 'f'
+#define FILTER_BY_DISTANCE_LE 'g'
+#define FILTER_BY_DISTANCE_EQ 'h'
+#define FILTER_BY_DISTANCE_GT 'i'
+#define FILTER_BY_DISTANCE_GE 'j'
 
 #define KNN 11
 #define OBJECTS_IN_RANGE 12
@@ -58,8 +66,6 @@ class QueryTree {
     vector<Filter> rightBranch;
     PointCollection rightDataPoint;
     RectangleCollection rightDataRect;
-//    SpatialIndexInterface rightIndexedObject;
-//	  SpatialIndexInterface leftIndexedObject;
 
 public:
     QueryTree();
@@ -68,19 +74,15 @@ public:
     void setLeftFilter(vector<Filter>);
     void setLeftPoints(PointCollection);
     void setLeftRectangles(RectangleCollection);
-//    void setLeftIndexedObject(SpatialIndexInterface);
     void setRightFilter(vector<Filter>);
     void setRightPoints(PointCollection);
     void setRightRectangles(RectangleCollection);
-//    void setRightIndexedObject(SpatialIndexInterface);
 	const vector<Filter>& getLeftBranch() const;
 	const PointCollection& getLeftDataPoint() const;
 	const RectangleCollection& getLeftDataRect() const;
-//	  SpatialIndexInterface getLeftIndexedObject() const;
 	const vector<Filter>& getRightBranch() const;
 	const PointCollection& getRightDataPoint() const;
 	const RectangleCollection& getRightDataRect() const;
-//	 SpatialIndexInterface getRightIndexedObject() const;
 	const char& getRootType() const;
 	const float& getRootParam() const;
 };
@@ -150,14 +152,18 @@ class QueryProcessing {
 
 private:
 	OperatorDictionary opDict;
+	SpatialIndexInterface* indexptr;
+	Catalog* catalopgptr;
 
 public:
 
+	QueryProcessing ();
+
 	QueryResult processQuery (QueryTree qTree);
 
-	PointCollection materializeBranch (vector<Filter> filter, PointCollection data);
+	PointCollection materializeBranch (char rootType, vector<Filter> filter, PointCollection data);
 
-	RectangleCollection materializeBranch (vector<Filter> filter, RectangleCollection data);
+	RectangleCollection materializeBranch (char rootType, vector<Filter> filter, RectangleCollection data);
 
 	PointPointCollection rangeJoin (PointCollection leftData, vector<Filter> filter, PointCollection rightData);
 
@@ -166,6 +172,12 @@ public:
 
 	PointRectangleCollection rangeJoin (
 			PointCollection leftData, vector<Filter> filter, RectangleCollection rightData);
+
+	RectangleRectangleCollection rangeJoinWithIndex (
+				RectangleCollection leftData, vector<Filter> filter, RectangleCollection rightData);
+
+		PointRectangleCollection rangeJoinWithIndex (
+				PointCollection leftData, vector<Filter> filter, RectangleCollection rightData);
 
 	PointPointCollection knnJoin (
 			float k, PointCollection leftData, vector<Filter> filter, PointCollection rightData);
@@ -196,6 +208,7 @@ public:
 
 	vector<Rectangle> getKnnRectanglesFromRectangle (int k, Rectangle inputRect, vector<Rectangle> inputRectangles);
 
+	PointPointCollection sweepBasedJoin (PointCollection leftData, PointCollection rightData, bool onX);
 };
 
 #endif

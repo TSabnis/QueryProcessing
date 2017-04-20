@@ -7,10 +7,15 @@
 
 #include <iostream>
 #include <vector>
+#include <algorithm>
+#include <map>
 #include "../integration/query-processing.h"
 
 using namespace std;
 
+QueryProcessing::QueryProcessing() {
+	catalopgptr = Catalog::Instance();
+}
 
 QueryResult QueryProcessing::processQuery (QueryTree qTree) {
 	QueryResult queryResult;
@@ -26,106 +31,146 @@ QueryResult QueryProcessing::processQuery (QueryTree qTree) {
 	queryResult.setResultType(INVALID);
 	// left data is points
 	if (!leftDataPoint.isEmpty() && leftDataRect.isEmpty()) {
-		PointCollection leftResult = materializeBranch(leftFilter, leftDataPoint);
+		PointCollection leftResult = materializeBranch(rootType, leftFilter, leftDataPoint);
 		// no right branch
-		if (rootType == NO_JOIN) {
+		if (rootType == NO_JOIN || rootType == NO_JOIN_DI || rootType == NO_JOIN_SI) {
 			queryResult.setResultType(TYPE_POINT);
 			queryResult.setPointCollection(leftResult);
 		}
 		else {
 			// right data is points
 			if (!rightDataPoint.isEmpty() && rightDataRect.isEmpty()) {
-				PointCollection rightResult = materializeBranch(rightFilter, rightDataPoint);
-				if (rootType == KNN_JOIN) {
-					PointPointCollection distanceJoinResult =
+				cout << "\nLeft & Right are Points\n";
+				PointCollection rightResult = materializeBranch(rootType, rightFilter, rightDataPoint);
+				if (rootType == KNN_JOIN || rootType == KNN_JOIN_DI || rootType == KNN_JOIN_SI) {
+					cout << "\nPerforming KNN Join \n";
+					cout << "\nRight Data Size : " << rightResult.getSize() << endl;
+					cout << "\nLeft Data Size : " << leftResult.getSize() << endl;
+					PointPointCollection joinResult =
 							knnJoin(qTree.getRootParam(), leftResult, rightFilter, rightResult);
 					queryResult.setResultType(TYPE_POINTPOINT);
-					queryResult.setPointPointCollection(distanceJoinResult);
+					queryResult.setPointPointCollection(joinResult);
 				}
-				else if (rootType == RANGE_JOIN) {
-					PointPointCollection distanceJoinResult = rangeJoin(leftResult, rightFilter, rightResult);
+				else if (rootType == RANGE_JOIN || rootType == RANGE_JOIN_DI || rootType == RANGE_JOIN_SI) {
+					PointPointCollection joinResult = rangeJoin(leftResult, rightFilter, rightResult);
 					queryResult.setResultType(TYPE_POINTPOINT);
-					queryResult.setPointPointCollection(distanceJoinResult);
+					queryResult.setPointPointCollection(joinResult);
 				}
-				else if (rootType == DISTANCE_JOIN) {
-					PointPointCollection distanceJoinResult =
+				else if (rootType == DISTANCE_JOIN || rootType == DISTANCE_JOIN_DI || rootType == DISTANCE_JOIN_SI) {
+					PointPointCollection joinResult =
 							distanceJoin(qTree.getRootParam(), leftResult, rightFilter, rightResult);
 					queryResult.setResultType(TYPE_POINTPOINT);
-					queryResult.setPointPointCollection(distanceJoinResult);
+					queryResult.setPointPointCollection(joinResult);
 				}
 			}
 			// right data is rectangles
 			else if (rightDataPoint.isEmpty() && !rightDataRect.isEmpty()) {
-				RectangleCollection rightResult = materializeBranch(rightFilter, rightDataRect);
-				if (rootType == KNN_JOIN) {
-					PointRectangleCollection distanceJoinResult =
+				RectangleCollection rightResult = materializeBranch(rootType, rightFilter, rightDataRect);
+				if (rootType == KNN_JOIN || rootType == KNN_JOIN_DI || rootType == KNN_JOIN_SI) {
+					PointRectangleCollection joinResult =
 							knnJoin(qTree.getRootParam(), leftResult, rightFilter, rightResult);
 					queryResult.setResultType(TYPE_POINTRECTANGLE);
-					queryResult.setPointRectangleCollection(distanceJoinResult);
+					queryResult.setPointRectangleCollection(joinResult);
 				}
-				else if (rootType == RANGE_JOIN) {
-					PointRectangleCollection distanceJoinResult = rangeJoin(leftResult, rightFilter, rightResult);
+				else if (rootType == RANGE_JOIN || rootType == RANGE_JOIN_DI || rootType == RANGE_JOIN_SI) {
+					PointRectangleCollection joinResult;
+					if ((rootType == RANGE_JOIN_DI || rootType == RANGE_JOIN_SI) && rightFilter.empty()) {
+						if (rootType == RANGE_JOIN_DI) {
+							indexptr = catalopgptr->getDataIndexedCollection(rightDataRect.getDBName(), rightDataRect.getTableName());
+						}
+						else {
+							indexptr = catalopgptr->getSpatialIndexedCollection(rightDataRect.getDBName(), rightDataRect.getTableName());
+						}
+						joinResult = rangeJoinWithIndex(leftResult, rightFilter, rightResult);
+					}
+					else {
+						joinResult = rangeJoin(leftResult, rightFilter, rightResult);
+					}
 					queryResult.setResultType(TYPE_POINTRECTANGLE);
-					queryResult.setPointRectangleCollection(distanceJoinResult);
+					queryResult.setPointRectangleCollection(joinResult);
 				}
-				else if (rootType == DISTANCE_JOIN) {
-					PointRectangleCollection distanceJoinResult =
+				else if (rootType == DISTANCE_JOIN || rootType == DISTANCE_JOIN_DI || rootType == DISTANCE_JOIN_SI) {
+					PointRectangleCollection joinResult =
 							distanceJoin(qTree.getRootParam(), leftResult, rightFilter, rightResult);
 					queryResult.setResultType(TYPE_POINTRECTANGLE);
-					queryResult.setPointRectangleCollection(distanceJoinResult);
+					queryResult.setPointRectangleCollection(joinResult);
 				}
 			}
 		}
 	}
 	// left data is rectangles
 	else if (leftDataPoint.isEmpty() && !leftDataRect.isEmpty()) {
-		RectangleCollection leftResult = materializeBranch(leftFilter, leftDataRect);
+		RectangleCollection leftResult = materializeBranch(rootType, leftFilter, leftDataRect);
 		// no right branch
-		if (rootType == NO_JOIN) {
+		if (rootType == NO_JOIN || rootType == NO_JOIN_DI || rootType == NO_JOIN_SI) {
 			queryResult.setResultType(TYPE_RECTANGLE);
 			queryResult.setRectangleCollection(leftResult);
 		}
 		else {
 			// right data is points
 			if (!rightDataPoint.isEmpty() && rightDataRect.isEmpty()) {
-				PointCollection rightResult = materializeBranch(rightFilter, rightDataPoint);
-				if (rootType == KNN_JOIN) {
-					PointRectangleCollection distanceJoinResult =
+				PointCollection rightResult = materializeBranch(rootType, rightFilter, rightDataPoint);
+				if (rootType == KNN_JOIN || rootType == KNN_JOIN_DI || rootType == KNN_JOIN_SI) {
+					PointRectangleCollection joinResult =
 							knnJoin(qTree.getRootParam(), leftResult, rightFilter, rightResult);
 					queryResult.setResultType(TYPE_POINTRECTANGLE);
-					queryResult.setPointRectangleCollection(distanceJoinResult);
+					queryResult.setPointRectangleCollection(joinResult);
 				}
-				else if (rootType == RANGE_JOIN) {
-					PointRectangleCollection distanceJoinResult = rangeJoin(rightResult, rightFilter, leftResult);
+				else if (rootType == RANGE_JOIN || rootType == RANGE_JOIN_DI || rootType == RANGE_JOIN_SI) {
+					PointRectangleCollection joinResult;
+					if ((rootType == RANGE_JOIN_DI || rootType == RANGE_JOIN_SI) && rightFilter.empty()) {
+						if (rootType == RANGE_JOIN_DI) {
+							indexptr = catalopgptr->getDataIndexedCollection(leftDataRect.getDBName(), leftDataRect.getTableName());
+						}
+						else {
+							indexptr = catalopgptr->getSpatialIndexedCollection(leftDataRect.getDBName(), leftDataRect.getTableName());
+						}
+						joinResult = rangeJoinWithIndex(rightResult, rightFilter, leftResult);
+					}
+					else {
+						joinResult = rangeJoin(rightResult, rightFilter, leftResult);
+					}
 					queryResult.setResultType(TYPE_POINTRECTANGLE);
-					queryResult.setPointRectangleCollection(distanceJoinResult);
+					queryResult.setPointRectangleCollection(joinResult);
 				}
-				else if (rootType == DISTANCE_JOIN) {
-					PointRectangleCollection distanceJoinResult =
+				else if (rootType == DISTANCE_JOIN || rootType == DISTANCE_JOIN_DI || rootType == DISTANCE_JOIN_SI) {
+					PointRectangleCollection joinResult =
 							distanceJoin(qTree.getRootParam(), rightResult, rightFilter, leftResult);
 					queryResult.setResultType(TYPE_POINTRECTANGLE);
-					queryResult.setPointRectangleCollection(distanceJoinResult);
+					queryResult.setPointRectangleCollection(joinResult);
 				}
 			}
 			// right data is rectangles
 			else if (rightDataPoint.isEmpty() && !rightDataRect.isEmpty()) {
-				RectangleCollection rightResult = materializeBranch(rightFilter, rightDataRect);
-				if (rootType == KNN_JOIN) {
-					RectangleRectangleCollection distanceJoinResult =
+				RectangleCollection rightResult = materializeBranch(rootType, rightFilter, rightDataRect);
+				if (rootType == KNN_JOIN || rootType == KNN_JOIN_DI || rootType == KNN_JOIN_SI) {
+					RectangleRectangleCollection joinResult =
 							knnJoin(qTree.getRootParam(), leftResult, rightFilter, rightResult);
 					queryResult.setResultType(TYPE_RECTANGLERECTANGLE);
-					queryResult.setRectangleRectangleCollection(distanceJoinResult);
+					queryResult.setRectangleRectangleCollection(joinResult);
 				}
-				else if (rootType == RANGE_JOIN) {
-					RectangleRectangleCollection distanceJoinResult = rangeJoin(leftResult, rightFilter, rightResult);
+				else if (rootType == RANGE_JOIN || rootType == RANGE_JOIN_DI || rootType == RANGE_JOIN_SI) {
+					RectangleRectangleCollection joinResult = rangeJoin(leftResult, rightFilter, rightResult);
+					if ((rootType == RANGE_JOIN_DI || rootType == RANGE_JOIN_SI) && rightFilter.empty()) {
+						if (rootType == RANGE_JOIN_DI) {
+							indexptr = catalopgptr->getDataIndexedCollection(rightDataRect.getDBName(), rightDataRect.getTableName());
+						}
+						else {
+							indexptr = catalopgptr->getSpatialIndexedCollection(rightDataRect.getDBName(), rightDataRect.getTableName());
+						}
+						joinResult = rangeJoinWithIndex(leftResult, rightFilter, rightResult);
+					}
+					else {
+						joinResult = rangeJoin(leftResult, rightFilter, rightResult);
+					}
 					queryResult.setResultType(TYPE_RECTANGLERECTANGLE);
-					queryResult.setRectangleRectangleCollection(distanceJoinResult);
+					queryResult.setRectangleRectangleCollection(joinResult);
 				}
-				else if (rootType == DISTANCE_JOIN) {
-					RectangleRectangleCollection distanceJoinResult =
+				else if (rootType == DISTANCE_JOIN || rootType == DISTANCE_JOIN_DI || rootType == DISTANCE_JOIN_SI) {
+					RectangleRectangleCollection joinResult =
 							distanceJoin(qTree.getRootParam(), leftResult, rightFilter, rightResult);
 					queryResult.setResultType(TYPE_RECTANGLERECTANGLE);
-					queryResult.setRectangleRectangleCollection(distanceJoinResult);
+					queryResult.setRectangleRectangleCollection(joinResult);
 				}
 			}
 		}
@@ -134,9 +179,35 @@ QueryResult QueryProcessing::processQuery (QueryTree qTree) {
 	return queryResult;
 }
 
-PointCollection QueryProcessing::materializeBranch (vector<Filter> filter, PointCollection data) {
+PointCollection QueryProcessing::materializeBranch (char rootType, vector<Filter> filter, PointCollection data) {
 	// initialize result
-	PointCollection result;
+	vector<Point> pt_null;
+	char dataOrientation = '0';//data.getCollectionStructure();
+	PointCollection result("","",dataOrientation,pt_null);
+
+	if (rootType == NO_JOIN_DI || rootType == RANGE_JOIN_DI || rootType == KNN_JOIN_DI || rootType == DISTANCE_JOIN_DI) {
+		indexptr = catalopgptr->getDataIndexedCollection(data.getDBName(), data.getTableName());
+		for (int i=0;i<filter.size();i++) {
+			if (filter[i].filterType == OBJECTS_IN_RANGE) {
+				Rectangle rec(filter[i].inputParams[0], filter[i].inputParams[1],
+						filter[i].inputParams[2], filter[i].inputParams[3]);
+				data = indexptr->searchPoint(rec);
+				break;
+			}
+		}
+	}
+	else if (rootType == NO_JOIN_SI || rootType == RANGE_JOIN_SI || rootType == KNN_JOIN_SI || rootType == DISTANCE_JOIN_SI) {
+		indexptr = catalopgptr->getSpatialIndexedCollection(data.getDBName(), data.getTableName());
+		for (int i=0;i<filter.size();i++) {
+			if (filter[i].filterType == OBJECTS_IN_RANGE) {
+				Rectangle rec(filter[i].inputParams[0], filter[i].inputParams[1],
+						filter[i].inputParams[2], filter[i].inputParams[3]);
+				data = indexptr->searchPoint(rec);
+				break;
+			}
+		}
+	}
+
 	vector<Point> points = data.getNext(data.getSize());
 	for (int i=0;i<filter.size();i++) {
 		if (filter[i].filterType == KNN) {
@@ -167,9 +238,33 @@ PointCollection QueryProcessing::materializeBranch (vector<Filter> filter, Point
 	return result;
 }
 
-RectangleCollection QueryProcessing::materializeBranch (vector<Filter> filter, RectangleCollection data) {
+RectangleCollection QueryProcessing::materializeBranch (char rootType, vector<Filter> filter, RectangleCollection data) {
 	// initialize result
 	RectangleCollection result;
+
+	if (rootType == NO_JOIN_DI || rootType == RANGE_JOIN_DI || rootType == KNN_JOIN_DI || rootType == DISTANCE_JOIN_DI) {
+		indexptr = catalopgptr->getDataIndexedCollection(data.getDBName(), data.getTableName());
+		for (int i=0;i<filter.size();i++) {
+			if (filter[i].filterType == OBJECTS_IN_RANGE) {
+				Rectangle rec(filter[i].inputParams[0], filter[i].inputParams[1],
+						filter[i].inputParams[2], filter[i].inputParams[3]);
+				data = indexptr->searchRectangle(rec);
+				break;
+			}
+		}
+	}
+	else if (rootType == NO_JOIN_SI || rootType == RANGE_JOIN_SI || rootType == KNN_JOIN_SI || rootType == DISTANCE_JOIN_SI) {
+		indexptr = catalopgptr->getSpatialIndexedCollection(data.getDBName(), data.getTableName());
+		for (int i=0;i<filter.size();i++) {
+			if (filter[i].filterType == OBJECTS_IN_RANGE) {
+				Rectangle rec(filter[i].inputParams[0], filter[i].inputParams[1],
+						filter[i].inputParams[2], filter[i].inputParams[3]);
+				data = indexptr->searchRectangle(rec);
+				break;
+			}
+		}
+	}
+
 	vector<Rectangle> rects = data.getNext(data.getSize());
 	for (int i=0;i<filter.size();i++) {
 		if (filter[i].filterType == KNN) {
@@ -212,6 +307,7 @@ vector<Point> QueryProcessing::getKnnPointsFromPoint (int k, Point inputPoint, v
 				if (distance < PointOperations::getDistance(inputPoint, knnPoints[j])) {
 					knnPoints.erase(knnPoints.begin() + j);
 					knnPoints.push_back(inputPoints[i]);
+					break;
 				}
 			}
 		}
@@ -271,6 +367,7 @@ vector<Rectangle> QueryProcessing::getKnnRectanglesFromRectangle (int k, Rectang
 				if (distance < RectangleOperations::getDistance(knnRectangles[j], inputRect)) {
 					knnRectangles.erase(knnRectangles.begin() + j);
 					knnRectangles.push_back(inputRectangles[i]);
+					break;
 				}
 			}
 		}
@@ -278,19 +375,93 @@ vector<Rectangle> QueryProcessing::getKnnRectanglesFromRectangle (int k, Rectang
 	return knnRectangles;
 }
 
+bool alongX(const Point &p1, const Point &p2){
+	return p1.getX() < p2.getX();
+}
+
+bool alongY(const Point &p1, const Point &p2){
+	return p1.getY() < p2.getY();
+}
+
+PointPointCollection QueryProcessing::sweepBasedJoin (PointCollection leftData, PointCollection rightData, bool onX) {
+
+	cout << " Debug : Using sweepBasedJoin \n";
+	vector<PointPoint> joinResultVector;
+
+	//bool sort_on_X = true;
+	int idx = onX ? 0 : 1;
+
+	vector<Point> leftPoints = leftData.getNext(leftData.getSize());
+	//sort(leftPoints.begin(), leftPoints.end(), onX ? alongX : alongY);	// Sorted based on a dimension
+
+	map<long int, vector<Point> > leftMap;										// Cogrouping the ranges of keys
+	long int key = 0;
+	for (Point pt : leftPoints){
+		key = pt.getCoordinates()[idx] * 100000;
+		leftMap[key].push_back(pt);
+	}
+
+	vector<Point> rightPoints = rightData.getNext(rightData.getSize());
+	//sort(rightPoints.begin(), rightPoints.end(), onX ? alongX : alongY);  // Sorted based on a dimension
+
+	map<long int, vector<Point> > rightMap;										// Cogrouping the ranges of keys
+	key = 0;
+	for (Point pt : rightPoints){
+		key = pt.getCoordinates()[idx] * 100000;
+		rightMap[key].push_back(pt);
+	}
+
+	map<long int, vector<Point> >::iterator leftItr = leftMap.begin();
+	map<long int, vector<Point> >::iterator rightItr = rightMap.begin();
+	int comparisions = 0;
+	while( leftItr != leftMap.end() && rightItr != rightMap.end()){
+		if (leftItr->first == rightItr->first){
+			//Do Join
+			vector<Point> leftSub = leftItr->second;
+			vector<Point> rightSub = rightItr->second;
+			for (Point pt_l : leftSub){
+				for (Point pt_r : rightSub){
+					comparisions++;
+					if( PointOperations::isOverlapping(pt_l, pt_r) || PointOperations::isEqual(pt_l, pt_r)){
+						PointPoint pp(pt_l.getCoordinates()[0], pt_l.getCoordinates()[1], pt_r.getCoordinates()[0], pt_r.getCoordinates()[1]);
+						joinResultVector.insert(joinResultVector.end(), pp);
+					}
+				}
+			}
+			leftItr++; rightItr++;
+		}
+		else if (leftItr->first < rightItr->first){
+			leftItr++;
+		}
+		else{
+			rightItr++;
+		}
+	}
+
+	cout << "Num of comparisions (sweep) : " << comparisions;
+	PointPointCollection rangeJoinResult(POINTPOINT,DB_NAME,TYPE_POINTPOINT,joinResultVector);
+	return rangeJoinResult;
+}
+
 PointPointCollection QueryProcessing::rangeJoin (PointCollection leftData, vector<Filter> filter,
 		PointCollection rightData) {
 
-	// bool use_only_sweep_join = true; 
-	// if (use_only_sweep_join)
-	// 	return sweepBasedJoin(leftData, filter, rightData);
+	/*if (leftData.getCollectionStructure() == COLLECTION_STRUCT_SORTEDX && rightData.getCollectionStructure() == COLLECTION_STRUCT_SORTEDX){
+		cout << "Found both data sorted on X (performing sweep join)";
+		return sweepBasedJoin(leftData, rightData, true);
+	}
+	else if (leftData.getCollectionStructure() == COLLECTION_STRUCT_SORTEDY && rightData.getCollectionStructure() == COLLECTION_STRUCT_SORTEDY){
+		cout << "Found both data sorted on Y (performing sweep join)";
+		return sweepBasedJoin(leftData, rightData, false);
+	}*/
 
 	vector<PointPoint> joinResultVector;
 	vector<Point> leftPoints = leftData.getNext(leftData.getSize());
 	vector<Point> rightPoints = rightData.getNext(rightData.getSize());
-
+	int comparisions = 0;
 	for (int i=0;i<leftPoints.size();i++) {
 		for (int j=0;j<rightPoints.size();j++) {
+			comparisions++;
 			if (PointOperations::isEqual(leftPoints[i], rightPoints[j])) {
 				PointPoint pp(leftPoints[i].getCoordinates()[0],leftPoints[i].getCoordinates()[1],
 						rightPoints[j].getCoordinates()[0],rightPoints[j].getCoordinates()[1]);
@@ -298,12 +469,14 @@ PointPointCollection QueryProcessing::rangeJoin (PointCollection leftData, vecto
 			}
 		}
 	}
+	cout << "Num of comparisions (nested): " << comparisions << endl;
 	PointPointCollection rangeJoinResult(POINTPOINT,DB_NAME,TYPE_POINTPOINT,joinResultVector);
 	return rangeJoinResult;
 }
 
 RectangleRectangleCollection QueryProcessing::rangeJoin (RectangleCollection leftData, vector<Filter> filter,
 		RectangleCollection rightData) {
+
 	vector<RectangleRectangle> joinResultVector;
 	vector<Rectangle> leftRects = leftData.getNext(leftData.getSize());
 	vector<Rectangle> rightRects = rightData.getNext(rightData.getSize());
@@ -322,6 +495,7 @@ RectangleRectangleCollection QueryProcessing::rangeJoin (RectangleCollection lef
 			}
 		}
 	}
+
 	RectangleRectangleCollection rangeJoinResult(RECTANGLERECTANGLE,DB_NAME,TYPE_RECTANGLERECTANGLE,joinResultVector);
 	return rangeJoinResult;
 }
@@ -348,11 +522,54 @@ PointRectangleCollection QueryProcessing::rangeJoin (PointCollection leftData, v
 	return rangeJoinResult;
 }
 
+RectangleRectangleCollection QueryProcessing::rangeJoinWithIndex (RectangleCollection leftData, vector<Filter> filter,
+		RectangleCollection rightData) {
+
+	vector<RectangleRectangle> joinResultVector;
+	vector<Rectangle> leftRects = leftData.getNext(leftData.getSize());
+
+	for (int i=0;i<leftRects.size();i++) {
+		rightData = indexptr->searchRectangle(leftRects[i]);
+		vector<Rectangle> rightRects = rightData.getNext(rightData.getSize());
+		for (int j=0;j<rightRects.size();j++) {
+			RectangleRectangle rr(leftRects[i].getCoordinates()[0],leftRects[i].getCoordinates()[1],
+					leftRects[i].getCoordinates()[2],leftRects[i].getCoordinates()[3],
+					rightRects[j].getCoordinates()[0],rightRects[j].getCoordinates()[1],
+					rightRects[j].getCoordinates()[2],rightRects[j].getCoordinates()[3]);
+			joinResultVector.insert(joinResultVector.end(),rr);
+		}
+	}
+
+	RectangleRectangleCollection rangeJoinResult(RECTANGLERECTANGLE,DB_NAME,TYPE_RECTANGLERECTANGLE,joinResultVector);
+	return rangeJoinResult;
+}
+
+PointRectangleCollection QueryProcessing::rangeJoinWithIndex (PointCollection leftData, vector<Filter> filter,
+		RectangleCollection rightData) {
+	vector<PointRectangle> joinResultVector;
+	vector<Rectangle> rightRects = rightData.getNext(rightData.getSize());
+	for (int j=0;j<rightRects.size();j++) {
+		leftData = indexptr->searchPoint(rightRects[j]);
+		vector<Point> leftPoints = leftData.getNext(leftData.getSize());
+		for (int i=0;i<leftPoints.size();i++) {
+			PointRectangle pr(leftPoints[i].getCoordinates()[0],leftPoints[i].getCoordinates()[1],
+					rightRects[j].getCoordinates()[0],rightRects[j].getCoordinates()[1],
+					rightRects[j].getCoordinates()[2],rightRects[j].getCoordinates()[3]);
+			joinResultVector.insert(joinResultVector.end(),pr);
+		}
+	}
+	PointRectangleCollection rangeJoinResult(POINTRECTANGLE,DB_NAME,TYPE_POINTRECTANGLE,joinResultVector);
+	return rangeJoinResult;
+}
+
 PointPointCollection QueryProcessing::knnJoin (float k, PointCollection leftData, vector<Filter> filter,
 		PointCollection rightData) {
 	vector<PointPoint> joinResultVector;
 	vector<Point> leftPoints = leftData.getNext(leftData.getSize());
 	vector<Point> rightPoints = rightData.getNext(rightData.getSize());
+	cout << "\nInside KNN Join \n";
+	cout << "\nRight Data Size : " << leftPoints.size();
+	cout << "\nLeft Data Size : " << rightPoints.size();
 	for (int i=0;i<leftPoints.size();i++) {
 		vector<Point> rightKnnPoints = getKnnPointsFromPoint((int)k, leftPoints[i], rightPoints);
 		for (int j=0;j<rightKnnPoints.size();j++) {
@@ -361,8 +578,9 @@ PointPointCollection QueryProcessing::knnJoin (float k, PointCollection leftData
 			joinResultVector.insert(joinResultVector.end(),pp);
 		}
 	}
-	PointPointCollection distanceJoinResult(POINTPOINT,DB_NAME,TYPE_POINTPOINT,joinResultVector);
-	return distanceJoinResult;
+	cout << " ** " << joinResultVector.size();
+	PointPointCollection joinResult(POINTPOINT,DB_NAME,TYPE_POINTPOINT,joinResultVector);
+	return joinResult;
 }
 
 RectangleRectangleCollection QueryProcessing::knnJoin (float k, RectangleCollection leftData, vector<Filter> filter,
@@ -380,8 +598,8 @@ RectangleRectangleCollection QueryProcessing::knnJoin (float k, RectangleCollect
 			joinResultVector.insert(joinResultVector.end(),rr);
 		}
 	}
-	RectangleRectangleCollection distanceJoinResult(RECTANGLERECTANGLE,DB_NAME,TYPE_RECTANGLERECTANGLE,joinResultVector);
-	return distanceJoinResult;
+	RectangleRectangleCollection joinResult(RECTANGLERECTANGLE,DB_NAME,TYPE_RECTANGLERECTANGLE,joinResultVector);
+	return joinResult;
 }
 
 PointRectangleCollection QueryProcessing::knnJoin (float k, PointCollection leftData, vector<Filter> filter,
@@ -398,8 +616,8 @@ PointRectangleCollection QueryProcessing::knnJoin (float k, PointCollection left
 			joinResultVector.insert(joinResultVector.end(),pr);
 		}
 	}
-	PointRectangleCollection distanceJoinResult(POINTRECTANGLE,DB_NAME,TYPE_POINTRECTANGLE,joinResultVector);
-	return distanceJoinResult;
+	PointRectangleCollection joinResult(POINTRECTANGLE,DB_NAME,TYPE_POINTRECTANGLE,joinResultVector);
+	return joinResult;
 }
 
 PointRectangleCollection QueryProcessing::knnJoin (float k, RectangleCollection leftData, vector<Filter> filter,
@@ -416,8 +634,8 @@ PointRectangleCollection QueryProcessing::knnJoin (float k, RectangleCollection 
 			joinResultVector.insert(joinResultVector.end(),pr);
 		}
 	}
-	PointRectangleCollection distanceJoinResult(POINTRECTANGLE,DB_NAME,TYPE_POINTRECTANGLE,joinResultVector);
-	return distanceJoinResult;
+	PointRectangleCollection joinResult(POINTRECTANGLE,DB_NAME,TYPE_POINTRECTANGLE,joinResultVector);
+	return joinResult;
 }
 
 PointPointCollection QueryProcessing::distanceJoin (float distThresh, PointCollection leftData,
@@ -434,8 +652,8 @@ PointPointCollection QueryProcessing::distanceJoin (float distThresh, PointColle
 			}
 		}
 	}
-	PointPointCollection distanceJoinResult(POINTPOINT,DB_NAME,TYPE_POINTPOINT,joinResultVector);
-	return distanceJoinResult;
+	PointPointCollection joinResult(POINTPOINT,DB_NAME,TYPE_POINTPOINT,joinResultVector);
+	return joinResult;
 }
 
 RectangleRectangleCollection QueryProcessing::distanceJoin (float distThresh, RectangleCollection leftData,
@@ -454,8 +672,8 @@ RectangleRectangleCollection QueryProcessing::distanceJoin (float distThresh, Re
 			}
 		}
 	}
-	RectangleRectangleCollection distanceJoinResult(RECTANGLERECTANGLE,DB_NAME,TYPE_RECTANGLERECTANGLE,joinResultVector);
-	return distanceJoinResult;
+	RectangleRectangleCollection joinResult(RECTANGLERECTANGLE,DB_NAME,TYPE_RECTANGLERECTANGLE,joinResultVector);
+	return joinResult;
 }
 
 PointRectangleCollection QueryProcessing::distanceJoin (float distThresh, PointCollection leftData,
@@ -473,6 +691,6 @@ PointRectangleCollection QueryProcessing::distanceJoin (float distThresh, PointC
 			}
 		}
 	}
-	PointRectangleCollection distanceJoinResult(POINTRECTANGLE,DB_NAME,TYPE_POINTRECTANGLE,joinResultVector);
-	return distanceJoinResult;
+	PointRectangleCollection joinResult(POINTRECTANGLE,DB_NAME,TYPE_POINTRECTANGLE,joinResultVector);
+	return joinResult;
 }
