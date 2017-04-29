@@ -51,6 +51,14 @@ void QueryTree::setRootParam(float rootParam) {
 	this->rootParam = rootParam;
 }
 
+void QueryTree::setLIndexType(char lIndexType) {
+	this->lIndexType = lIndexType;
+}
+
+void QueryTree::setRIndexType(char rIndexType) {
+	this->rIndexType = rIndexType;
+}
+
 void QueryTree::setRightPoints(PointCollection rightPoints) {
 	this->rightDataPoint = rightPoints;
 }
@@ -97,6 +105,14 @@ const char& QueryTree::getRootType() const {
 
 const float& QueryTree::getRootParam() const {
 	return rootParam;
+}
+
+const char& QueryTree::getLIndexType() const {
+	return lIndexType;
+}
+
+const char& QueryTree::getRIndexType() const {
+	return rIndexType;
 }
 
 /*void QueryTree::setRightIndexedObject(SpatialIndexInterface rightIndexedObject) {
