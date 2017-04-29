@@ -13,6 +13,8 @@ QueryTree::QueryTree() {
 
 	this->rootType = NO_JOIN;
 	this->rootParam = 0.0;
+	this->lIndexType = NO_INDEX;
+	this->rIndexType = NO_INDEX;
 
 	vector<Filter> filterNull;
 	this->leftBranch = filterNull;
