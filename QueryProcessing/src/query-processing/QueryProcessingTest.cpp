@@ -52,7 +52,7 @@ bool queryProcessingTests() {
 	RectangleCollection retcolNull;
 
 
-	cout<<"\n---------------------------------------------------------------------------------------------\n";
+	/*cout<<"\n---------------------------------------------------------------------------------------------\n";
 	cout<<"Test 1 : FilterBy Distance -\n\t Find the points that are greater than distance 2 from point (0,0)";
 	cout<<"\n---------------------------------------------------------------------------------------------\n";
 	{
@@ -638,7 +638,7 @@ bool queryProcessingTests() {
 			cout << "Fail Test 9"<<endl;
 		}
 
-	}
+	}*/
 
 	cout<<"\n--------------------------------------------------------------------------------------------------\n";
 	cout<<"Test 10 : Range Join - POINT-RECTANGLE \n";
@@ -709,7 +709,7 @@ bool queryProcessingTests() {
 
 	}
 
-	cout<<"\n---------------------------------------------------------------------------------------------\n";
+	/*cout<<"\n---------------------------------------------------------------------------------------------\n";
 	cout<<"Test 11 : KNN Join - POINT-POINT , K=3\n";
 	cout<<"\t left branch all Points Collections without any filter\n";
     cout<<"\t right branch all Points Collections without any filter\n";
@@ -864,7 +864,14 @@ bool queryProcessingTests() {
 			cout << "Fail Test 13"<<endl;
 		}
 
-	}
+	}*/
+	return 0;
+}
 
+int main() {
+
+	queryProcessingTests();
+
+	return 0;
 }
 
