@@ -36,13 +36,13 @@ QueryResult QueryProcessing::processQuery (QueryTree qTree) {
 	if (!leftDataPoint.isEmpty() && leftDataRect.isEmpty()) {
 		if (qTree.getLIndexType() != NO_INDEX) {
 			if (qTree.getLIndexType() == DATA_INDEX) {
-				lIndexptr = catalogptr->getDataIndexedCollection(leftDataPoint.getDBName(), leftDataPoint.getTableName());
+				lIndexptr = Catalog::Instance()->getDataIndexedCollection(leftDataPoint.getDBName(), leftDataPoint.getTableName());
 			}
 			else {
-				lIndexptr = catalogptr->getSpatialIndexedCollection(leftDataPoint.getDBName(), leftDataPoint.getTableName());
+				lIndexptr = Catalog::Instance()->getSpatialIndexedCollection(leftDataPoint.getDBName(), leftDataPoint.getTableName());
 			}
 			if (lIndexptr == NULL) {
-				cout<< "Query requires index but catalog has returned null" <<endl;
+				cout<< "\nQuery requires index but catalog has returned null 1" <<endl;
 				exit(1);
 			}
 		}
@@ -57,13 +57,13 @@ QueryResult QueryProcessing::processQuery (QueryTree qTree) {
 			if (!rightDataPoint.isEmpty() && rightDataRect.isEmpty()) {
 				if (qTree.getRIndexType() != NO_INDEX) {
 					if (qTree.getRIndexType() == DATA_INDEX) {
-						rIndexptr = catalogptr->getDataIndexedCollection(rightDataPoint.getDBName(), rightDataPoint.getTableName());
+						rIndexptr = Catalog::Instance()->getDataIndexedCollection(rightDataPoint.getDBName(), rightDataPoint.getTableName());
 					}
 					else {
-						rIndexptr = catalogptr->getSpatialIndexedCollection(rightDataPoint.getDBName(), rightDataPoint.getTableName());
+						rIndexptr = Catalog::Instance()->getSpatialIndexedCollection(rightDataPoint.getDBName(), rightDataPoint.getTableName());
 					}
 					if (rIndexptr == NULL) {
-						cout<< "Query requires index but catalog has returned null" <<endl;
+						cout<< "\nQuery requires index but catalog has returned null 2" <<endl;
 						exit(1);
 					}
 				}
@@ -94,13 +94,13 @@ QueryResult QueryProcessing::processQuery (QueryTree qTree) {
 			else if (rightDataPoint.isEmpty() && !rightDataRect.isEmpty()) {
 				if (qTree.getRIndexType() != NO_INDEX) {
 					if (qTree.getRIndexType() == DATA_INDEX) {
-						rIndexptr = catalogptr->getDataIndexedCollection(rightDataRect.getDBName(), rightDataRect.getTableName());
+						rIndexptr = Catalog::Instance()->getDataIndexedCollection(rightDataRect.getDBName(), rightDataRect.getTableName());
 					}
 					else {
-						rIndexptr = catalogptr->getSpatialIndexedCollection(rightDataRect.getDBName(), rightDataRect.getTableName());
+						rIndexptr = Catalog::Instance()->getSpatialIndexedCollection(rightDataRect.getDBName(), rightDataRect.getTableName());
 					}
 					if (rIndexptr == NULL) {
-						cout<< "Query requires index but catalog has returned null" <<endl;
+						cout<< "\nQuery requires index but catalog has returned null 3" <<endl;
 						exit(1);
 					}
 				}
@@ -140,13 +140,13 @@ QueryResult QueryProcessing::processQuery (QueryTree qTree) {
 	else if (leftDataPoint.isEmpty() && !leftDataRect.isEmpty()) {
 		if (qTree.getLIndexType() != NO_INDEX) {
 			if (qTree.getLIndexType() == DATA_INDEX) {
-				lIndexptr = catalogptr->getDataIndexedCollection(leftDataRect.getDBName(), leftDataRect.getTableName());
+				lIndexptr = Catalog::Instance()->getDataIndexedCollection(leftDataRect.getDBName(), leftDataRect.getTableName());
 			}
 			else {
-				lIndexptr = catalogptr->getSpatialIndexedCollection(leftDataRect.getDBName(), leftDataRect.getTableName());
+				lIndexptr = Catalog::Instance()->getSpatialIndexedCollection(leftDataRect.getDBName(), leftDataRect.getTableName());
 			}
 			if (lIndexptr == NULL) {
-				cout<< "Query requires index but catalog has returned null" <<endl;
+				cout<< "\nQuery requires index but catalog has returned null 4" <<endl;
 				exit(1);
 			}
 		}
@@ -161,13 +161,13 @@ QueryResult QueryProcessing::processQuery (QueryTree qTree) {
 			if (!rightDataPoint.isEmpty() && rightDataRect.isEmpty()) {
 				if (qTree.getRIndexType() != NO_INDEX) {
 					if (qTree.getRIndexType() == DATA_INDEX) {
-						rIndexptr = catalogptr->getDataIndexedCollection(rightDataPoint.getDBName(), rightDataPoint.getTableName());
+						rIndexptr = Catalog::Instance()->getDataIndexedCollection(rightDataPoint.getDBName(), rightDataPoint.getTableName());
 					}
 					else {
-						rIndexptr = catalogptr->getSpatialIndexedCollection(rightDataPoint.getDBName(), rightDataPoint.getTableName());
+						rIndexptr = Catalog::Instance()->getSpatialIndexedCollection(rightDataPoint.getDBName(), rightDataPoint.getTableName());
 					}
 					if (rIndexptr == NULL) {
-						cout<< "Query requires index but catalog has returned null" <<endl;
+						cout<< "\nQuery requires index but catalog has returned null 5" <<endl;
 						exit(1);
 					}
 				}
@@ -205,13 +205,13 @@ QueryResult QueryProcessing::processQuery (QueryTree qTree) {
 			else if (rightDataPoint.isEmpty() && !rightDataRect.isEmpty()) {
 				if (qTree.getRIndexType() != NO_INDEX) {
 					if (qTree.getRIndexType() == DATA_INDEX) {
-						rIndexptr = catalogptr->getDataIndexedCollection(rightDataPoint.getDBName(), rightDataPoint.getTableName());
+						rIndexptr = Catalog::Instance()->getDataIndexedCollection(rightDataPoint.getDBName(), rightDataPoint.getTableName());
 					}
 					else {
-						rIndexptr = catalogptr->getSpatialIndexedCollection(rightDataPoint.getDBName(), rightDataPoint.getTableName());
+						rIndexptr = Catalog::Instance()->getSpatialIndexedCollection(rightDataPoint.getDBName(), rightDataPoint.getTableName());
 					}
 					if (rIndexptr == NULL) {
-						cout<< "Query requires index but catalog has returned null" <<endl;
+						cout<< "\nQuery requires index but catalog has returned null 6" <<endl;
 						exit(1);
 					}
 				}
@@ -261,7 +261,7 @@ PointCollection QueryProcessing::materializeBranch (QueryTree qTree, vector<Filt
 		PointCollection data, char side) {
 	// initialize result
 	vector<Point> pt_null;
-	char dataOrientation = '0';//data.getCollectionStructure();
+	char dataOrientation = data.getCollectionStructure();
 	PointCollection result("","",dataOrientation,pt_null);
 
 	PointCollection* dataptr = new PointCollection();
@@ -303,14 +303,21 @@ PointCollection QueryProcessing::materializeBranch (QueryTree qTree, vector<Filt
 		}
 	}
 	int j = 0;
+	// ()
 	while (j < data.getSize()) {
 		bool passedAllOperators = true;
 		for (int i=0;i<filter.size();i++) {
-			if (filter[i].filterType != KNN &&
-					(((side == 'l' && qTree.getLIndexType()!=NO_INDEX) || (side == 'r' && qTree.getRIndexType()!=NO_INDEX))
-							&& filter[i].filterType != OBJECTS_IN_RANGE)) {
-				passedAllOperators = passedAllOperators && opDict.applyOperator(filter[i],points[j]);
+			if (filter[i].filterType != KNN) {
+				if(((side == 'l' && qTree.getLIndexType()!=NO_INDEX) || (side == 'r' && qTree.getRIndexType()!=NO_INDEX))){
+					if(filter[i].filterType != OBJECTS_IN_RANGE){
+						passedAllOperators = passedAllOperators && opDict.applyOperator(filter[i],points[j]);
+					}
+				}
+				else{
+					passedAllOperators = passedAllOperators && opDict.applyOperator(filter[i],points[j]);
+				}
 			}
+			
 		}
 		if (passedAllOperators) {
 			result.insert(points[j]);
@@ -323,7 +330,9 @@ PointCollection QueryProcessing::materializeBranch (QueryTree qTree, vector<Filt
 RectangleCollection QueryProcessing::materializeBranch (QueryTree qTree, vector<Filter> filter,
 		RectangleCollection data, char side) {
 	// initialize result
-	RectangleCollection result;
+	char dataOrientation = data.getCollectionStructure();
+	vector<Rectangle> rt_null;
+	RectangleCollection result("","",dataOrientation,rt_null);
 
 	RectangleCollection* dataptr = new RectangleCollection();
 	dataptr = &data;
@@ -367,10 +376,15 @@ RectangleCollection QueryProcessing::materializeBranch (QueryTree qTree, vector<
 	while (j < data.getSize()) {
 		bool passedAllOperators = true;
 		for (int i=0;i<filter.size();i++) {
-			if (filter[i].filterType != KNN &&
-					(((side == 'l' && qTree.getLIndexType()!=NO_INDEX) || (side == 'r' && qTree.getRIndexType()!=NO_INDEX))
-							&& filter[i].filterType != OBJECTS_IN_RANGE)) {
-				passedAllOperators = passedAllOperators && opDict.applyOperator(filter[i],rects[j]);
+			if (filter[i].filterType != KNN) {
+				if(((side == 'l' && qTree.getLIndexType()!=NO_INDEX) || (side == 'r' && qTree.getRIndexType()!=NO_INDEX))){
+					if(filter[i].filterType != OBJECTS_IN_RANGE){
+						passedAllOperators = passedAllOperators && opDict.applyOperator(filter[i],rects[j]);
+					}
+				}
+				else{
+					passedAllOperators = passedAllOperators && opDict.applyOperator(filter[i],rects[j]);
+				}
 			}
 		}
 		if (passedAllOperators) {
